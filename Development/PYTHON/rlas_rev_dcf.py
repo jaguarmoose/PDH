@@ -4,6 +4,8 @@ import getopt
 import adnod
 import pdh_files
 import os
+import itertools
+import operator
 
 # input file name
 # input output node address
@@ -26,10 +28,13 @@ else:
 
 lashan = open(lasfnm, 'r')
 try:
-    for section, result in parseLAS(lashan):
-        print(section)
-except:
-    print('issue parsing')
+    results = parseLAS(lashan)
+    for section, result in results:
+        if section == 'ascii':
+            break
+    print('\n'.join(map(str,zip(*map(operator.itemgetter(1),results)))))
+except Exception as e:
+    print('issue parsing',e)
 
 # line=''
 # while line[0:2]!='~A':

@@ -1,4 +1,5 @@
 import re
+from collections import deque
 
 
 def getSection(match):
@@ -42,9 +43,9 @@ def parseLAS(lines):
             if match:
                 parameter, unit, value, description = match.groups()
                 if currentSection == 'version':
-                    if parameter.Upper() == 'WRAP':
+                    if parameter.upper() == 'WRAP':
                         wrap = value.strip().lower()
-                    elif parameter.Upper() == 'SEP':
+                    elif parameter.upper() == 'SEP':
                         sep = value.strip().lower()
                 elif currentSection == 'curve':
                     curves.append(parameter.strip())
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 
     lashan = open(lasfnm, 'r')
     try:
-        print('\n'.join(map(str, parseLAS(lashan))))
-
-    except:
-        print('issue parsing')
+        deque(parseLAS(lashan))
+        # print('\n'.join(map(str, parseLAS(lashan))))
+    except Exception as e:
+        print('issue parsing', e)
