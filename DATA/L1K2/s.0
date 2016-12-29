@@ -1,0 +1,5 @@
+{'Rtype': 'HD', 'Name': 'Twilight'}
+{'Npts': '1000', 'Start': '1000', 'DI': '0.5', 'Index': 'Depth', 'Rtype': 'DI', 'Units': 'Feet'}
+{'Value': '.05', 'Name': 'Rw', 'Unit': 'Ohm-m', 'Rtype': 'GP'}
+{'Name': 'Pore', 'Units': 'Dec', 'FileNum': 2, 'Rtype': 'VF'}
+{'Name': 'Rt', 'Units': 'ohm-m', 'FileNum': 1, 'Rtype': 'VF'}

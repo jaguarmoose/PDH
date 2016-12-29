@@ -1,0 +1,19 @@
+import pdh_files, adnod
+curnode= "1:2"              # frend provides curnode
+rfp=adnod.ns2path(curnode)
+di=1                        # IP picks up from Curnode DI
+nin='6'
+nout='1'
+mxpts='10000'
+sindex='1000'         # IP pick up from Curnode start depth which is Index 1
+npts ='100'               # IP picks up NINDS from Curnode
+fns="2:1"                   # based on $RFCON find Runf file in user node   
+pnode = "3:1:1"             # executable program file is under system node 1 spec file is s.1 no sure where exe is yet
+pathu="C:/PDH/USER"        # read the rfcon then search the user inf file for input rcfon
+paths="C:/PDH/System"
+usernum="4"                 # User Number four how many do you want 
+usfn="s.1"                 # given user number need subroutine to open user s.0
+rfpath=rfp+ r'/s.5'
+prgnm='Bunker'
+rfvals=["1","#2",".08","2","2","#1","#4"]
+stuff= pdh_files.wrrf(rfpath,prgnm,nin,nout,rfvals,sindex,npts,mxpts)

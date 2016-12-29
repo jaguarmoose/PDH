@@ -1,0 +1,5 @@
+{'Name': 'well_name_1:1:4:1', 'Rtype': 'HD'}
+{'DI': '0.5', 'Start': '100.000', 'Npts': '10402', 'Index': 'Depth', 'Rtype': 'DI', 'Units': 'Feet'}
+{'Name': 'DEPTH', 'Units': 'not yet', 'FileNum': 7, 'Rtype': 'VF'}
+{'Name': 'GR', 'Units': 'not yet', 'FileNum': 8, 'Rtype': 'VF'}
+{'Name': 'RHOB', 'Units': 'not yet', 'FileNum': 9, 'Rtype': 'VF'}
