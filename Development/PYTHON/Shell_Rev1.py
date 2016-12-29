@@ -46,7 +46,9 @@ rfdepth=[]
 stuff=pdh_files.rdrf(rfpath,rfhead,rfivals,rfovals,rfdepth)
 nin=int(rfhead[0])# 
 nout=int(rfhead[1]) # Needed Out files are created by input processor
-sindex=int(rfdepth[0])
+
+
+
 npts=int(rfdepth[1]) # Read fron runfile rfdepth
 mxpts=int(rfdepth[2]) # Read from runfile
          # Read Each Input and determine if vector or constant
@@ -59,6 +61,8 @@ ivals=rfivals*1
 oivals=ivals*1
 #olabs=["Sw"]
 #ovals=["#3"]
+
+ 
 ovals=rfovals*1
 oovals=ovals*1
 inhan=[] # Create a list to handle file handles
