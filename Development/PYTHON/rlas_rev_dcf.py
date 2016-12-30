@@ -1,4 +1,4 @@
-from LASParser import parseLAS
+from LASParser import parseLAS, LASParseError
 import sys
 import getopt
 import adnod
@@ -22,19 +22,18 @@ import operator
 
 if __name__ == '__main__':
     curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
-    lasfnm = u"C:\PDH\Development\LAS\LAS Files\D-D' LAS Files\Bean\Bean_A.las"
+    lasfnm = os.path.realpath(os.path.join("Development", "LAS", "LAS Files","D-D' LAS Files",
+                                           "Bean","Bean_A.las"))
 else:
     lasfnm = input("Enter LAS File Name")
 
 lashan = open(lasfnm, 'r')
 try:
-    results = parseLAS(lashan)
-    for section, result in results:
-        if section == 'ascii':
-            break
-    print('\n'.join(map(str,zip(*map(operator.itemgetter(1),results)))))
-except Exception as e:
-    print('issue parsing',e)
+    #deque(parseLAS(file))
+    print('\n'.join(map(str,zip(*filter(lambda d: d[0]=='ascii',parseLAS(lashan))))))
+    # print('\n'.join(map(str, parseLAS(lashan))))
+except LASParseError as e:
+    print(e,filepath)
 
 # line=''
 # while line[0:2]!='~A':
