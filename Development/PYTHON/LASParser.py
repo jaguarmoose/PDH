@@ -45,7 +45,7 @@ def parseLAS(lines):
             if match:
                 # Split common line format into pieces and clean
                 parameter, unit, value, description = map(str.strip, match.groups())
-                if version < 2:
+                if version is not None and version < 2:
                     value, description = description, value
                 if currentSection == 'version':
                     if parameter.upper() == 'WRAP':
