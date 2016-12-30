@@ -18,9 +18,6 @@ def getSection(match):
 
 parameterRule = re.compile(u'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
 
-# Version 2.0+
-# STRT.FT                                      100.0000:
-
 
 def parseLAS(lines):
     sep = None
@@ -34,17 +31,19 @@ def parseLAS(lines):
     currentSection = None
     version = None
     for i, line in enumerate(lines):
+
+        # Check for Section Delimiter Character ~
         if line.strip().startswith('~'):
             try:
                 currentSection = getSection(line.strip()[1:2].upper())
             except:
-                print('unknown block', line)
-                return
+                raise LASParseError("Unknown Section: {} at Line#: {}".format(line.strip(),i))
         if line.strip().startswith('#') or currentSection == 'other':
             yield('comment', line)
         elif currentSection != 'ascii':
             match = parameterRule.match(line)
             if match:
+                # Split common line format into pieces and clean
                 parameter, unit, value, description = map(str.strip, match.groups())
                 if version < 2:
                     value, description = description, value
@@ -52,6 +51,7 @@ def parseLAS(lines):
                     if parameter.upper() == 'WRAP':
                         wrap = value
                     elif parameter.upper() == 'VERS':
+                        # Try to float value so we can compare it numerically
                         try:
                             version = float(value)
                         except:
@@ -68,6 +68,7 @@ def parseLAS(lines):
                     elif parameter.upper() == 'NULL':
                         null = value
                 elif currentSection == 'curve':
+                    # build list so we can use these later
                     curves.append(parameter.strip())
                 yield(currentSection, (parameter, unit, value, description))
         else:
@@ -79,7 +80,6 @@ def parseLAS(lines):
                 else:
                     values = line.split(sep)
                 if len(values) != len(curves):
-                    print('Mismatch Length of curves and values', curves, values, line)
                     raise LASParseError("Mismatch Length of Curves: {} and Values: {} for Line#: {}".format(stop, values[0], curves[0], line))
                 else:
                     if firstLine:
@@ -89,7 +89,7 @@ def parseLAS(lines):
                                 raise LASParseError("Stop Value: {} matches First Value: {} in Reference: {} for Line#: {}".format(stop, values[0], curves[0], line))
                             else:
                                 raise LASParseError("Start Value: {} does not match First Value: {} in Reference: {} for Line#: {}".format(strt, values[0], curves[0], line))
-                yield (currentSection, values)
+                    yield (currentSection, values)
 
             if float(stop) != float(values[0]):
                 raise LASParseError("Stop Value: {} does not match Last Value: {} in Reference: {} for Line#: {}".format(stop, values[0], curves[0], line))
