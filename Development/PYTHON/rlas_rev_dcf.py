@@ -30,7 +30,18 @@ else:
 lashan = open(lasfnm, 'r')
 try:
     #deque(parseLAS(file))
-    print('\n'.join(map(str,zip(*filter(lambda d: d[0]=='ascii',parseLAS(lashan))))))
+    parsedLAS = parseLAS(lashan)
+    curves = []
+    for line in parsedLAS:
+        if line[0] == 'ascii':
+            print(curves)
+            curveMatrix = zip(*map(operator.itemgetter(1), itertools.chain((line,),parsedLAS)))
+            print('\n'.join(map(str, curveMatrix)))
+            break
+        elif line[0] == 'curve':
+            print(line)
+            curves.append(line[1][0])
+
     # print('\n'.join(map(str, parseLAS(lashan))))
 except LASParseError as e:
     print(e,filepath)

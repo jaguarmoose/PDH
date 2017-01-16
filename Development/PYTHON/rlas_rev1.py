@@ -3,9 +3,15 @@ import getopt
 import adnod
 import pdh_files
 import os
+# Enter Parent Node string
+PNS="1:1:4"
 # assume 1 file / well
-curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
+curnode=adnod.nxtkid(PNS)
+#curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
 # C:\PDH\Development\LAS\LAS Files\D-D' LAS Files\Bean\Bean_A.las
+# C:\PDH\Development\LAS\LAS Files\D-D' LAS Files\Zechman\Zechman_A.las
+#C:\PDH\Development\LAS\LAS Files\KGS-Cimarex\KGS-Cimarex.las
+
 lasfnm = input("Enter LAS File Name")
 lashan = open(lasfnm, 'r')
 line = ''

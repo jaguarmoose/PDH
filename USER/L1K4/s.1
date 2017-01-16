@@ -1,14 +1,9 @@
-{'Ftype': 'URun', 'Rtype': 'HD','Prgnm':'Archie','NIN':'6','NOUT':'1'}
-{'Rtype': 'IN','NUM':'0','label':'a','val':'1','units':'na','help':'tortuosity','range':''}
-{'Rtype': 'IN','NUM':'1','label':'PHi','val':'$Pore','units':'dec','help':'porosity','range':''}
-{'Rtype': 'IN','NUM':'2','label':'Rw','val':'.05','units':'ohm-m','help':'water resistivity','range':''}
-{'Rtype': 'IN','NUM':'3','label':'m','val':'2','units':'na','help':'cementation exponent','range':''}
-{'Rtype': 'IN','NUM':'4','label':'n','val':'2','units':'na','help':'saturation exponent','range':''}
-{'Rtype': 'IN','NUM':'5','label':'Rt','val':'-999.99','units':'na','help':'True Formation Resistitivy','range':''}
-{'Rtype': 'OUT','NUM':'0','label':'SW','val':'-999.99','units':'dec','help':'Water Saturation','range':''}
-{'Rtype': 'DEPTH','TYPE':'','Start':'100','End':'600'}
-
-# This is a comment record - 
-# User run file here user inputs are saved curves GPs are in generic way $ for curve name % GP !zone
-# Depth needs to be specified in run file record type is  IX for index, three ways to specify
-# Start Depth,End Depth, Current Zone , entire Node  where N= node, Z zone,''means enter Start End
+{'Ftype': 'Run', 'NIN': '6', 'NOUT': '1', 'Rtype': 'HD', 'Prgnm': 'Archie'}
+{'Rtype': 'IN', 'uval': '1'}
+{'Rtype': 'IN', 'uval': 'vPore'}
+{'Rtype': 'IN', 'uval': 'zRw'}
+{'Rtype': 'IN', 'uval': 'gM'}
+{'Rtype': 'IN', 'uval': '2'}
+{'Rtype': 'IN', 'uval': 'vRt'}
+{'Rtype': 'OUT', 'uval': 'vSW_RAF'}
+{'Rtype': 'OUT', 'uval': 'vSW_RAF'}

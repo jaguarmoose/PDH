@@ -1,0 +1,9 @@
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:4'}
+{'Start': '1960', 'Index': 'Depth', 'Units': 'Feet', 'DI': '0.5', 'Rtype': 'DI', 'Npts': '6802'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 1, 'Name': 'DEPTH'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 2, 'Name': 'PE'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 3, 'Name': 'DPHI'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 4, 'Name': 'NPHI'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 5, 'Name': 'GR'}
+{'Rtype': 'VF', 'Units': 'not yet', 'FileNum': 6, 'Name': 'AHT90'}
+{'Name': 'r', 'Unit': 'ohm', 'Rtype': 'GP', 'Value': '.03'}

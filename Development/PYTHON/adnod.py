@@ -1,10 +1,23 @@
-def adnod(ns):      # Add a data node to 
+def adnod(ns):      # Add a kid node -given parent node - this creates system folder
     import os
     path = ns2path(ns)
     os.mkdir(path)  # need to do a whole bunch of error checking
     path=path+"\s.0"
     fs0=open(path,"w")
     fs0.close
+# Add a kid node -given parent node - this creates system folder
+def nxtkid(pns):
+    import os
+    i=1
+    kns=pns+":"+str(i)
+    path = ns2path(kns)
+    while os.path.exists(path):
+        i=i+1
+        kns=pns+":"+str(i)
+        path=ns2path(kns)
+    os.mkdir(path)
+    return kns
+
 def ns2path(ns):    # convert a nodestring to dir path
     import os
     path='C:\PDH\DATA'
@@ -14,7 +27,7 @@ def ns2path(ns):    # convert a nodestring to dir path
         path = path + "\L" + str(I)+ "K"+ nanc[I]
     print(path)
     return path
-def uns2path(uns,urpath):    # convert a user number to dir path
+def un2path(uns,urpath):    # convert a user number to dir path
     import os
     nanc= ns.split(":")
     nlev = len(nanc)
@@ -22,4 +35,3 @@ def uns2path(uns,urpath):    # convert a user number to dir path
         path = urpath + "\L" + str(I)+ "K"+ nanc[I]
     print(path)
     return path
-            

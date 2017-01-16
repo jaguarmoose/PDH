@@ -1,0 +1,11 @@
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:5'}
+{'Start': '1960', 'Index': 'Depth', 'Units': 'Feet', 'DI': '0.5', 'Rtype': 'DI', 'Npts': '6802'}
+{'Unit': 'yes', 'Value': '.05', 'Name': 'Rw', 'Rtype': 'GP'}
+{'Unit': 'na', 'Value': '2.1', 'Name': 'M', 'Rtype': 'GP'}
+{'Name': 'Pore', 'Units': 'dec', 'FileNum': '4', 'Rtype': 'VF'}
+{'Name': 'Rt', 'Units': 'ohm-m', 'FileNum': '5', 'Rtype': 'VF'}
+{'Name': 'SW', 'Units': 'dec', 'FileNum': '6', 'Rtype': 'VF'}
+{'Rtype': 'VF', 'Units': 'na', 'FileNum': '7', 'Name': 'Sw'}
+{'Name': 'SW_RAF', 'FileNum': '8', 'Units': 'na', 'Rtype': 'VF'}
+{'ZTop': '2000', 'Name': 'ZoneA', 'ZBase': '5000', 'Rtype': 'ZO'}
+{'Unit': ' ', 'Zone': 'ZoneA', 'Value': '.1951', 'Rtype': 'ZP', 'Name': 'Rw'}
