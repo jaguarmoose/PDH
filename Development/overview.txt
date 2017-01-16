@@ -1,0 +1,122 @@
+TODO
+Let check Shell program is working
+Need to get IP to work correctly for Shell
+need to implement David LAS parser
+
+working on RLAS
+seems to work OK on single well put in parent and kid logic in
+
+Records in an INF file
+HD
+DI
+ZO
+GP
+ZP
+VF
+SF
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:5'}
+{'Index': 'Depth', 'Rtype': 'DI', 'Start': '1960', 'Npts': '6802', 'DI': '0.5', 'Units': 'Feet'}
+{'Rtype': 'ZO', 'Name': zname, 'ZTop': '6802', 'ZBase':'8000', 'Units': 'Feet'}
+{'Unit': 'yes', 'Value': '.05', 'Name': 'Rw', 'Rtype': 'GP'}
+{'Unit': 'yes', 'Value': '.05', 'Name': 'Rw', 'Rtype': 'ZP','ZONE':zonename}
+{'Units': 'not yet', 'FileNum': 1, 'Rtype': 'VF', 'Name': 'DEPTH'}
+{'FileNum': '1', 'Rtype': 'SF', 'Name': 'Archie_RAF','Rfcon':" ",'Ftype':"Run",'PName':'Archie'}
+Jan 4 2017
+Improve IP
+OBJECTS
+
+PROGRAM Object - contains execution file,specification file,help file
+
+
+
+
+Modify following routines for spec and run files
+User Runfile needs to have user input
+Runfile needs to have user input and resolved value
+rdrf - add rfuivals rfuovlas
+	rdrf(rfpath, rfhead, rfuivals,rfivals,rfuovals, rfovals, rfdepth)
+wrrf - added rfuvals also write out dict uval item
+	wrrf(rfpath,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts):
+wrurf - modified-renamed to user val also dict item is uval
+	wrurf(rfpath,prgnm,nin,nout,rfuvals,start,end):
+rdusrrf -appending uvals eliniated urdepths from call
+	rdusrrf(urfpath,urfuvals):
+Need to look at IP and SHell
+	Need to look at call strings initial and add values
+	Currently in IP need to resolve User Input to actual value
+Figure out Depth
+
+Spec file for Archie
+{'Ftype': 'Spec', 'Rtype': 'HD','Prgnm':'Archie','NIN':'6','NOUT':'1'}
+{'Rtype': 'IN','NUM':'0','label':'a','def':'1','units':'na','help':'tortuosity','range':''}
+{'Rtype': 'IN','NUM':'1','label':'PHi','def':'-999.99','units':'dec','help':'porosity','range':''}
+{'Rtype': 'IN','NUM':'2','label':'Rw','def':'.05','units':'ohm-m','help':'water resistivity','range':''}
+{'Rtype': 'IN','NUM':'3','label':'m','def':'2','units':'na','help':'cementation exponent','range':''}
+{'Rtype': 'IN','NUM':'4','label':'n','def':'2','units':'na','help':'saturation exponent','range':''}
+{'Rtype': 'IN','NUM':'5','label':'Rt','def':'-999.99','units':'na','help':'Ture Formation Resistitivy','range':''}
+{'Rtype': 'OUT','NUM':'0','label':'SW','def':'-999.99','units':'dec','help':'Water Saturation','range':''}
+UserFile Archie
+{'Ftype': 'URun', 'Rtype': 'HD','Prgnm':'Archie','NIN':'6','NOUT':'1'}
+{'Rtype': 'IN','NUM':'0','label':'a','val':'1','units':'na','help':'tortuosity','range':''}
+{'Rtype': 'IN','NUM':'1','label':'PHi','val':'$Pore','units':'dec','help':'porosity','range':''}
+{'Rtype': 'IN','NUM':'2','label':'Rw','val':'.05','units':'ohm-m','help':'water resistivity','range':''}
+{'Rtype': 'IN','NUM':'3','label':'m','val':'2','units':'na','help':'cementation exponent','range':''}
+{'Rtype': 'IN','NUM':'4','label':'n','val':'2','units':'na','help':'saturation exponent','range':''}
+{'Rtype': 'IN','NUM':'5','label':'Rt','val':'-999.99','units':'na','help':'True Formation Resistitivy','range':''}
+{'Rtype': 'OUT','NUM':'0','label':'SW','val':'-999.99','units':'dec','help':'Water Saturation','range':''}
+{'Rtype': 'DEPTH','TYPE':'','Start':'100','End':'600'}
+
+RunFile for Archie
+{'Ftype': 'Run', 'Rtype': 'HD','Prgnm':'Archie','NIN':'6','NOUT':'1'}
+{'Rtype': 'IN','val':'1'}
+{'Rtype': 'IN','val':'#2'}
+{'Rtype': 'IN','val':'.05''}
+{'Rtype': 'IN','val':'2'}
+{'Rtype': 'IN','val':'2'}
+{'Rtype': 'IN','val':'#1'}
+{'Rtype': 'OUT','val':'#3'}
+{'Rtype': 'DEPTH','Start':'200','NPTS':'500','MXPTS':'1000'}
+# This is a comment record -
+# Data run file here user inputs were resolved by IP and placed in this file
+# Depth has been made explicit for this node and specified by start and number of points
+
+
+This is an INF s.0 file
+
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:3'}
+{'Index': 'Depth', 'Rtype': 'DI', 'Start': '1960', 'Npts': '6802', 'DI': '0.5', 'Units': 'Feet'}
+{'Units': 'not yet', 'FileNum': 1, 'Rtype': 'VF', 'Name': 'DEPTH'}
+{'Units': 'not yet', 'FileNum': 2, 'Rtype': 'VF', 'Name': 'PE'}
+{'Units': 'not yet', 'FileNum': 3, 'Rtype': 'VF', 'Name': 'DPHI'}
+{'Units': 'not yet', 'FileNum': 4, 'Rtype': 'VF', 'Name': 'NPHI'}
+{'Units': 'not yet', 'FileNum': 5, 'Rtype': 'VF', 'Name': 'GR'}
+{'Units': 'not yet', 'FileNum': 6, 'Rtype': 'VF', 'Name': 'AHT90'}
+{'Units': 'Dec', 'Name': 'SW_RAF', 'Rtype': 'VF', 'FileNum': 7}
+
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:5'}
+{'Start': '1960', 'Index': 'Depth', 'Units': 'Feet', 'DI': '0.5', 'Rtype': 'DI', 'Npts': '6802'}
+{'Unit': 'yes', 'Value': '.05', 'Name': 'Rw', 'Rtype': 'GP'}
+{'Unit': 'na', 'Value': '2.1', 'Name': 'M', 'Rtype': 'GP'}
+{'Name': 'Pore', 'Units': 'dec', 'FileNum': '4', 'Rtype': 'VF'}
+{'Name': 'Rt', 'Units': 'ohm-m', 'FileNum': '5', 'Rtype': 'VF'}
+{'Name': 'SW', 'Units': 'dec', 'FileNum': '6', 'Rtype': 'VF'}
+{'Rtype': 'VF', 'Units': 'na', 'FileNum': '7', 'Name': 'Sw'}
+{'Name': 'SW_RAF', 'FileNum': '8', 'Units': 'na', 'Rtype': 'VF'}
+	Storage
+		File |---|
+		Directory ====
+	Process
+		oooo
+
+
+
+
+==== DATA
+==== System
+==== User
+
+
+oooo Input Processor
+oooo Frend
+
+|---| s.0 Info file for each node in each folder D.U.S
