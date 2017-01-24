@@ -30,53 +30,55 @@ import pdh_files
                            # Also may need to think about a non-zone container
                            #though node GP may handle
 
-
+prgnm="Archie"
 pathd="C:/PDH/DATA"        # adnod needs work
 # 0 - Set up Front End Globals
 # From user name get user number and from user num get last user globs
 fegnames=['CURNODE','MODE','Zone','RFIN','RFOUT','NODECRIT']
 # This is read and written to User
 fegvalues=['1:1:4:5','i','ZoneA','RAF_Test','RAFOUT','F']
-i=0
+
+    # This is where GUI needs
+glob=''
+while glob !='q':
+    i=0
     for a,b in zip(fegnames,fegvalues): # User Sets Globals
         print("Global "+str(i)+" " + a +" = "+b)
         i=i+1
-        # This is where GUI needs
+    glob = input("Enter # of global to change , c to continue,q to quite prog")
+    if glob != 'q' and glob!= 'c':
+        gn=int(glob)
+        fegvalues[gn]=input("enter new value for "+ fegnames[gn])
 
-glob=''
-while glob !='q':
-    glob = input("Enter # of global to change , q to quite prog")
-    
-curnode= input("Enter curnode String")  # from FREND
+curnode= fegvalues[0]
+mode=fegvalues[1]
+zone=fegvalues[2]
+rfconin=fegvalues[3]
+rfconout=fegvalues[4]
+nodecrit=fegvalues[5]
+rfnamin = prgnm + '_' + rfconin
 nodestuff=[]
 nodestuff= pdh_files.rdinf(curnode)
-#,nodename,nindex,nstart,nnpts,ndi,nunits):
+#,nodename,nindex,nstart,nnpts,ndi,nunits)
 nname=nodestuff[0]
 nameindex=nodestuff[1]
 sdepth=nodestuff[2]
 nindexes=nodestuff[3]
 indexunits=nodestuff[4]
 di=nodestuff[5]
-# Setting up input for user
-
-
-# read S.0 Curnode
-#sdepth="1000"                 # read sdepth Curnode start depth which is Index 1
-# DI='.5'
-#nindexes="1000"               # read  NINDS from Curnode
+# Setting up input for user where this goes depends a little on mode
 curpath=adnod.ns2path(curnode)
-
-rfconin= "RAFtest"             # RFCON from FREND actually in and out
-rfpathin=curpath + r"/s.7"    # CURPATH + SF=NM2SFN(Curnode,PNAME,RFCON
-zone="ZoneA"             # this is execution zone
-Mode="I"                     # from FREND
+sfn=pdh_files.fnm2num(curnode,'SF',rfconin)
+rfpathin = ' '
+if sfn != ' ':
+    rfpathin = curpath + r"/s."+sfn    # CURPATH + SF=NM2SFN(Curnode,PNAME,RFCON
+rfpathout = ' '
+sfn= pdh_files.fnm2num(curnode,'SF',rfconin)
 
 #pname = Ns2Prog             #
-prgnm="Archie"
+
 pathu="C:/PDH/USER"        # read the rfcon then search the user inf file for input rcfon
-
 usernum="4"                 # User Number from frend four how many do you want
-
 #stuff= adnod.un2path(uns,urpath)
 usfn="sf.1"                 # given user number open user s.0 , find urf =(upath, pname+rfconin)
 
@@ -103,27 +105,32 @@ nout=sphead[1]
 
 # 2 GET Previous Inputs If Mode=U OPEN AND READ USER RUNFILE_IN If Mode=I read Data RF
 # Overlay defaults from Spec with UserVals
-urfpath=pathu + r"/L1K4/s.1"  # This is User 4 s.1 but should be Frend: User Num RFCON_IN
-urfuvals=[]
-urfdepths=[]
-stuff=pdh_files.rdusrrf(urfpath,urfuvals) # This picks up last vals from user RF
-                                          # If interactive Need to walk thru these on curnode and resolve
-rfhead=[]
-rfuivals=[]
-rfivals=[]
-rfuovals=[]
-rfovals=[]
-rfdepth=[]
-if rfpathin != '':
-    stuff =pdh_files.rdrf(rfpathin, rfhead, rfuivals,rfivals,rfuovals, rfovals, rfdepth)
+if mode=='U':
+    urfpath=pathu + r"/L1K4/s.1"  # This is User 4 s.1 but should be Frend: User Num RFCON_IN
+    urfuvals=[]
+    urfdepths=[]
+    stuff=pdh_files.rdusrrf(urfpath,urfuvals) # This picks up last vals from user RF
+                                    # If interactive Need to walk thru these on curnode and resolve
+rfhead = []
+rfuivals = []
+rfivals = []
+rfuovals = []
+rfovals = []
+rfdepth = []
+if rfpathin != ' ':
+    pdh_files.rdrf(rfpathin,rfhead,rfuivals,rfivals,rfuovals,rfovals,rfdepth)
     rfuvals=list(rfuivals+rfuovals)
     rfvals=list(rfivals+rfovals)
-else:
+elif mode == 'U':
     rfuvals=list(urfuvals)
     rfvals=list(urfuvals)
+else:
+    rfuvals=list(spdef)
+    rfvals=list (spdef)
 # 3 Present User with Option to select Inputs
 w2c=''
 while w2c!='q':
+
     i=0
     for a,b,c,d,e,f in zip(sptypr,splabs,rfuvals,spunits,sphelp,rfvals): # Main part of IP
         print(str(i)+" " + e +" an "+ a +" variable named "+b+ " has a value of "+ c +" "+f+" "+d)
@@ -136,7 +143,7 @@ while w2c!='q':
         wnewval=newval
         if newval[0]== 'v':      # will need to create new curve on exit
             wnewval=newval[1:]  # assumed user input curvename needs conversion to curve #
-            wnewval = pdh_files.vnm2num(curnode,newval[1:])# vnum is # curve number #'' means not found
+            wnewval = pdh_files.fnm2num(curnode,'VF',newval[1:])# vnum is # curve number #'' means not found
             if wnewval ==' ':
                 print ("Robert VF file was not found - could be good or bad ")
                                          # this gets written to runfile val list
@@ -148,7 +155,7 @@ while w2c!='q':
             wnewval= pdh_files.rdzp(curnode,zone,newval[1:])
             if wnewval == ' ':
                 print("Robert you need to do something ZP not found")
-            
+
         rfuvals[i2c]=newval
         rfvals[i2c]= wnewval                              # User input is translated
 for a,b,c in zip(splabs,rfuvals,rfvals):                        # from names to numbers
@@ -163,17 +170,17 @@ if dtype == 'N' or dtype =='n':
     sindex="1"
     npts=nindexes
 elif dtype=="Z" or dtype =='z':
-    # need to get top base from Zone 
+    # need to get top base from Zone
     fdend=float(sdepth)+float(nindexes)*float(di)-float(di)
     dend=str(fdend)
     sdep,edep=pdh_files.rdzone (curnode,zone)
     if float(sdep)<float(sdepth)or float(sdep)>fdend:
-        sdep=sdepth           
-    fedep=float(edep)           
+        sdep=sdepth
+    fedep=float(edep)
     if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
-        edep=dend           
+        edep=dend
     sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
-    npts=str(int((float(edep)-float(sdep))/float(di)+1))      
+    npts=str(int((float(edep)-float(sdep))/float(di)+1))
     print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
     dum=input('Hit return to continue')
 else:              # If Dtype=Z then zone Process- get Zone depths
@@ -182,13 +189,13 @@ else:              # If Dtype=Z then zone Process- get Zone depths
     dend=str(fdend)
     sdep=input('Data Start '+sdepth+' Enter start depth ')
     if float(sdep)<float(sdepth)or float(sdep)>fdend:
-        sdep=sdepth           
+        sdep=sdepth
     edep=input('Data End '+dend+' Enter end depth ')
-    fedep=float(edep)           
+    fedep=float(edep)
     if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
-        edep=dend           
+        edep=dend
     sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
-    npts=str(int((float(edep)-float(sdep))/float(di)+1))      
+    npts=str(int((float(edep)-float(sdep))/float(di)+1))
     print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
     dum=input('Hit return to continue')
 # 5 User has made all input
@@ -199,10 +206,17 @@ for x in (int(nin),int(nin)+int(nout)-1):
 
 # Now update User Runfile (IN or OUT) with new vals depth info not needed
 # This depends on mode for now just rewriting
-stuff = pdh_files.wrurf(urfpath,prgnm,nin,nout,rfuvals)
+if mode == 'U':
+    stuff = pdh_files.wrurf(urfpath,prgnm,nin,nout,rfuvals)
 #Create RF/UPdate RF in Curnode
 #Need to get DI data from curnode - also make sure float are handled correctly
-mxpts=nindexes       # from Curnode do I need this or should Shell know
+mxpts=nindexes
+if rfpathin == ' ':
+    rfpathin, nsf = pdh_files.nxtsf(curnode)
+    #append new SF record to sf and write new SF file
+    pdh_files.wrrecsf(curpath, str(nsf), rfnamin)
+          # from Curnode do I need this or should Shell know
 rfpathout=rfpathin    #this needs to be determined from RFCON
+# need to create rf record in inf file
 stuff =pdh_files.wrrf(rfpathout,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts)
 # At this point IP is done FREND should be able to execute prog with data node RFCON

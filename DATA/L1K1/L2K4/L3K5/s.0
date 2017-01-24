@@ -9,3 +9,5 @@
 {'Name': 'SW_RAF', 'FileNum': '8', 'Units': 'na', 'Rtype': 'VF'}
 {'ZTop': '2000', 'Name': 'ZoneA', 'ZBase': '5000', 'Rtype': 'ZO'}
 {'Unit': ' ', 'Zone': 'ZoneA', 'Value': '.1951', 'Rtype': 'ZP', 'Name': 'Rw'}
+{'Name': 'Archie_RAF_Test', 'FileNum': '1', 'Rtype': 'SF'}
+{'Name': 'Archie_RAF_Test', 'FileNum': '2', 'Rtype': 'SF'}

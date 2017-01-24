@@ -130,11 +130,11 @@ def nxtsf(ns):
     import os
     import adnod
     n=1
-    path = adnod.ns2path(ns)
-    path=path+"\s."+str(n)
+    ipath = adnod.ns2path(ns)
+    path=ipath+"\s."+str(n)
     while os.path.isfile(path):
         n=n+1
-        path=path+"\s."+str(n)
+        path=ipath+"\s."+str(n)
     return path,n
 def crvf(ns, name, units,npts, nval=-999.99):
      #Create a Vector File, updated: include npts in call nval in call default
@@ -255,7 +255,17 @@ def wrgp(path,name,value,units):  # write a GP or update a GP in an INF file
 def wrrecvf(path,n,name,units):
     finf=open(path+"s.0","a")
     recvf={'Rtype':'VF','Name': name,'FileNum': n,'Units':units}
-
+    return
+def wrrecsf(path,n,name):
+    finf=open(path+"\s.0","a")
+    recsf=str({'Rtype':'SF','Name': name,'FileNum': n})
+    oline=recsf + "\n"
+    finf.write(oline)
+    finf.close()
+    fsf=open(path +"s."+n,'w')
+    fsf.write(str({'Rtype':'HD','Name': name})+'\n')
+    fsf.close()
+    return
 def upvf(vpath,sinx,ninx,minx,vdata):     # This will write to a vector file
     import os
     print(vpath)
@@ -387,27 +397,27 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals):
     rfhan.write(s + '\n')
     rfhan.close()
     return
-def vnm2num(curnode,vfname):
+def fnm2num(curnode,rtype,fname):
                 # open s.0 for curnode
-                # read vf records looking for vfname if present return VF#
+                # read records looking for match to file type and name
+                # if present return num else
                 # if EOF return ''
     import os,ast,adnod
     curpath=adnod.ns2path(curnode)
-    infpath=curpath+"/s.0"
+    infpath = curpath+"/s.0"
     infhan=open(infpath,"r")
     for line in infhan.readlines():
         line=line.strip('\n')
         if len(line)> 1 and line[0]== "{":
             d=ast.literal_eval(line) # line is now a dictionary
-            if d['Rtype'] =='VF' and d['Name']==vfname :
-                vnum=d['FileNum']
+            if d['Rtype'] == rtype and d['Name']==fname :
+                fnum=d['FileNum']
                 infhan.close()
-                return vnum
+                return fnum
     infhan.close()
-    vnum=' '
-    return vnum
-def sfnm2num(curnode,sflabel):      # Read s.0 node find Sf label return file #
-    return
+    fnum = ' '
+    return fnum
+
 def rduglobf(uffpath,ugnvals,ugfvals): # This still needs to be flanged out for all global names
     import ast
     import sys

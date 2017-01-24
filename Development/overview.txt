@@ -1,6 +1,18 @@
 TODO
-Let check Shell program is working
-Need to get IP to work correctly for Shell
+Get SF files working
+Get dictionary alphabetical
+Get User Num Working
+Get call to program to working
+get RLAS DCf working
+Write write LAS
+Write 2nd Shell program
+
+Get Shell program to work
+
+
+
+
+Let check Shell program is working it is
 need to implement David LAS parser
 
 working on RLAS
