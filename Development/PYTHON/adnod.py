@@ -19,19 +19,18 @@ def nxtkid(pns):
     return kns
 
 def ns2path(ns):    # convert a nodestring to dir path
-    import os
-    path='C:\PDH\DATA'
+    path=r'C:\PDH\DATA'
     nanc= ns.split(":")
     nlev = len(nanc)
     for I in range(1,nlev):
         path = path + "\L" + str(I)+ "K"+ nanc[I]
     print(path)
     return path
-def un2path(uns,urpath):    # convert a user number to dir path
-    import os
-    nanc= ns.split(":")
+def uns2path(uns):    # convert a user number to dir path
+    urpath= r'C:\PDH\USER'
+    nanc= uns.split(":")
     nlev = len(nanc)
     for I in range(1,nlev):
-        path = urpath + "\L" + str(I)+ "K"+ nanc[I]
-    print(path)
-    return path
+        urpath = urpath + "\L" + str(I)+ "K"+ nanc[I]
+    print(urpath)
+    return urpath

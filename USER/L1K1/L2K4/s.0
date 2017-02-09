@@ -1,0 +1,5 @@
+{'Rtype': 'HD', 'Ftype': 'Info_User','Name': 'Robert Farnan'}
+{'Name': 'Archie_Test1','FileNum':'1', 'Rtype': 'SF','Kind':'Run'}
+{'Rtype': 'SF', 'Name': 'Archie_RAFOUT', 'FileNum': '2'}
+{'FileNum': '3', 'Name': 'globals', 'Rtype': 'SF', 'Kind': 'Glob'}
+{'FileNum': '4', 'Name': 'rafnodes', 'Rtype': 'SF', 'Kind': 'Nodes'}

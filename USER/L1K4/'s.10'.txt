@@ -1,4 +1,0 @@
-{'Ftype': 'Uglobal', 'Rtype': 'HD'}
-{'Rtype':'GNode','Nodecrit':'','Curnode':'','Rfcon':'','Zone':''}
-['rtype':'GFrend','CURMENU':'','HELPLEV':'','LASTMLEV':'','MODE':'','NOABORT':'','NOPROMPT':'','TERMID':''}
-                                 

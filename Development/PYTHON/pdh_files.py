@@ -130,7 +130,10 @@ def nxtsf(ns):
     import os
     import adnod
     n=1
-    ipath = adnod.ns2path(ns)
+    if ns[0] == '2':
+        ipath=adnod.uns2path(ns)
+    else:
+        ipath = adnod.ns2path(ns)
     path=ipath+"\s."+str(n)
     while os.path.isfile(path):
         n=n+1
@@ -256,9 +259,9 @@ def wrrecvf(path,n,name,units):
     finf=open(path+"s.0","a")
     recvf={'Rtype':'VF','Name': name,'FileNum': n,'Units':units}
     return
-def wrrecsf(path,n,name):
+def wrrecsf(path,n,name,kind=''):
     finf=open(path+"\s.0","a")
-    recsf=str({'Rtype':'SF','Name': name,'FileNum': n})
+    recsf=str({'Rtype':'SF','Name': name,'FileNum': n,'Kind':kind})
     oline=recsf + "\n"
     finf.write(oline)
     finf.close()
@@ -397,45 +400,121 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals):
     rfhan.write(s + '\n')
     rfhan.close()
     return
-def fnm2num(curnode,rtype,fname):
+def fnm2num(curnode,rtype,fname,kind=''):
                 # open s.0 for curnode
                 # read records looking for match to file type and name
                 # if present return num else
                 # if EOF return ''
-    import os,ast,adnod
-    curpath=adnod.ns2path(curnode)
+    import os, ast, adnod
+    if curnode[0] == '2':
+        curpath = adnod.uns2path(curnode)
+    else:
+        curpath = adnod.ns2path(curnode)
     infpath = curpath+"/s.0"
     infhan=open(infpath,"r")
     for line in infhan.readlines():
         line=line.strip('\n')
         if len(line)> 1 and line[0]== "{":
             d=ast.literal_eval(line) # line is now a dictionary
-            if d['Rtype'] == rtype and d['Name']==fname :
-                fnum=d['FileNum']
-                infhan.close()
-                return fnum
+            if kind == '':
+                if d['Rtype'] == rtype and d['Name']==fname :
+                    fnum=d['FileNum']
+                    infhan.close()
+                    return fnum
+            else:
+                if d['Rtype'] == rtype and d['Name']==fname and d['Kind']== kind:
+                    fnum=d['FileNum']
+                    infhan.close()
+                    return fnum
     infhan.close()
     fnum = ' '
     return fnum
 
-def rduglobf(uffpath,ugnvals,ugfvals): # This still needs to be flanged out for all global names
-    import ast
-    import sys
-    uffhan=open(uffpath,'r') # Open User Run File
-    for line in uffhan.readlines():
-        line=line.strip("\n")
-        if len(line)> 1 and line[0]== "{":
-            d=ast.literal_eval(line) # line is now a dictionary
-#'Rtype':'GNode','Nodecrit':'','Curnode':'','Rfcon':'','Zone':''}
-            if d['Rtype']== 'Gnode':
-                ugnvals.append(d['Curnode']) #
-                ugnvals.append(d['Nodecrit']) #
-                ugnvals.append(d['Rfcon']) #
-                ugnvals.append(d['Zone']) #
- #'GFrend','CURMENU':'','HELPLEV':'','LASTMLEV':'','MODE':'','NOABORT':'','NOPROMPT':'','TERMID':''}
-            elif d['Rtype'] == 'GFrend':
-                ugfvals.append(d['Curmenu'])
-                ugfvals.append(d['Helplev'])
-                ugfvals.append(d['Lastlev'])
-    uffhan.close()
+
+# write user global file
+def wruglobf(usernode, glfnam, glnams, glvals):
+    import adnod
+    userpath = adnod.uns2path(usernode)
+    sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
+    if sfn == ' ':
+        uglpath, n = nxtsf(usernode)
+        wrrecsf(userpath, str(n), glfnam, 'Glob')
+    else:
+        uglpath = userpath + r"/s."+sfn
+    uglhan = open(uglpath, 'w')
+    i = 0
+    while i < len(glnams):
+        recglvl = {'Rtype': 'Global','Glonam':glnams[i],'Gloval':glvals[i]}
+        s = str(recglvl)
+        uglhan.write(s + '\n')
+        i = i+1
+    uglhan.close()
     return
+
+
+def rduglobf(usernode, glfnam, glnams, glvals):
+    import ast
+    import adnod
+    userpath = adnod.uns2path(usernode)
+    sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
+    if sfn == ' ':
+        return
+    else:
+        uglpath = userpath + r"/s."+sfn
+        uglhan = open(uglpath, 'r')
+        for line in uglhan.readlines():
+            line=line.strip("\n")
+            if len(line)> 1 and line[0]== "{":
+                d=ast.literal_eval(line) # line is now a dictionary
+                i = 0
+                while i < len(glnams):
+                    if d['Glonam']== glnams[i]:
+                        glvals[i] = d['Gloval']
+                    i = i + 1
+    uglhan.close()
+    return
+
+
+def rdnodesf(usernode, nodesfnam, nodes, nodenames):
+    import ast
+    import adnod
+    userpath = adnod.uns2path(usernode)
+    sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
+    if sfn == ' ':
+        return
+    else:
+        nodespath = userpath + r"/s."+sfn
+        nodeshan = open(nodespath, 'r')
+        for line in nodeshan.readlines():
+            line = line.strip("\n")
+            if len(line) > 1 and line[0] == "{":
+                d = ast.literal_eval(line)  # line is now a dictionary
+                nodes.append(d['NStr'])
+                nodenames.append(d['NNam'])
+        nodeshan. close()
+    return
+
+# write user nodes file
+
+
+def wrnodesf(usernode, nodesfnam, nodes, nodenames):
+    import adnod
+    userpath = adnod.uns2path(usernode)
+    sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
+    if sfn == ' ':
+        nodespath, n = nxtsf(usernode)
+        wrrecsf(userpath, str(n), nodesfnam, 'Nodes')
+    else:
+        nodespath = userpath + r"/s."+sfn
+    nodeshan = open(nodespath, 'w')
+    i = 0
+    while i < len(nodes):
+        recnodes = {'NStr': nodes[i], 'NNam': nodenames[i]}
+        s = str(recnodes)
+        nodeshan.write(s + '\n')
+        i = i+1
+    nodeshan.close()
+    return
+
+if __name__ == '__main__':
+    wrnodesf()

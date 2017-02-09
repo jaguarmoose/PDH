@@ -1,12 +1,6 @@
 import sys, getopt , adnod
 import pdh_files
-# User is # 4 2:4 - s.0 has pointer to s.1 which is user runfile
-# Data Node is 1:2 it has s.0 v.1 is poroisty v.2 rt v.3 sw s.7is archie run file
-#
-#
-# 2. based on $RFCON it reads the runfile in from the user
-# goto User Node , Find and Read last runfile for program
-# Depending MODe
+
 # 3a MODE is Interactive or Friendly,build
 #    Displays input/options/output and allows user to select desired values ( friendly only parms not-defined)
 #    for most fields for input user can select a constant,node gp,zone gp or a curve
@@ -16,29 +10,33 @@ import pdh_files
 # 6. IP also any new curves are created.
 # From FREND ( CURNODE,USERN,PNAME,RFCONIN,RFCONOUT,ZONE,MODE,DTYPE)
 # From Frend - Data User and System Root Paths
-		# Depth/Zone info is passed to program via runfile - Shell for instance
+# Depth/Zone info is passed to program via runfile - Shell for instance
+#open frend file for W
+# read globals from frend files
+# globals are GL.Name Value
+# Read until EOF find all GL.Name if name matches Global Name assign value
+# Global $CURMENU,$CURNODE,$HELPLEV,$LASTMLEV,$MODE,$NOABORT,$NODECRIT,$NOPROMPT,$RFCON,$TERMID
+#,$ZONE,$NODECRIT,$RFCON
+# Also may need to think about a non-zone container
+#though node GP may handle
 
-                                #open frend file for W
-                                  # read globals from frend files
-                                  # globals are GL.Name Value
-                                  # Read until EOF find all GL.Name if name matches Global Name assign value
-                                  # Global $CURMENU,$CURNODE,$HELPLEV,$LASTMLEV,$MODE,$NOABORT,$NODECRIT,$NOPROMPT,$RFCON,$TERMID
-                                  #,$ZONE,$NODECRIT,$RFCON
-                                  # Get user input - This will be done via a GUI twinker
-                           #IMPORTANT at some time neeed to handle IP MODE
-                           # alos need to do ZONE
-                           # Also may need to think about a non-zone container
-                           #though node GP may handle
-
-prgnm="Archie"
-pathd="C:/PDH/DATA"        # adnod needs work
+prgnm= "Archie"
+pathd= "C:/PDH/DATA"        # adnod needs work
+paths="C:/PDH/System"      # adnod should do this
+pnode = "3:1:1"             #executable program file is under system node 3:1 spec file is s.1 (orlabeled SPEC)
+sppath=paths + r"/L1K1/L2K1/s.1" # This really should be found by program name
+pathu="C:/PDH/USER"        # All this sets up User paths needs subroutine
+usernum="4"                 # User Number from frend four how many do you want
+usernode = "2:1:" + usernum
+userpath = adnod.uns2path(usernode)
 # 0 - Set up Front End Globals
+#
 # From user name get user number and from user num get last user globs
-fegnames=['CURNODE','MODE','Zone','RFIN','RFOUT','NODECRIT']
+fegnames = ['CURNODE', 'MODE', 'Zone', 'RFIN', 'RFOUT', 'NODECRIT']
 # This is read and written to User
-fegvalues=['1:1:4:5','i','ZoneA','RAF_Test','RAFOUT','F']
-
-    # This is where GUI needs
+fegvalues= ['1:1:4:5','U','ZoneA','RAFOUT','RAFOUT','F']
+# Read User Global File an SF in Usernode for now just gets
+pdh_files.rduglobf(usernode, "globals", fegnames, fegvalues)
 glob=''
 while glob !='q':
     i=0
@@ -49,174 +47,243 @@ while glob !='q':
     if glob != 'q' and glob!= 'c':
         gn=int(glob)
         fegvalues[gn]=input("enter new value for "+ fegnames[gn])
+pdh_files.wruglobf(usernode, "globals", fegnames, fegvalues)
+mode = fegvalues[1]
+zone = fegvalues[2]
+rfconin = fegvalues[3]
+rfconout = fegvalues[4]
+# Get Curnode from global or nodecrit where nodecrit is a user nodes file name
+morenodes = 1
+inode = 0
+nodecrit = fegvalues[5]
+nodes = []
+nodenames = []
+if nodecrit != ' ' or nodecrit != 'f' or nodecrit != 'F':
+    pdh_files.rdnodesf(usernode, nodecrit, nodes, nodenames)
+while morenodes > 0:
+    if nodecrit == '' or nodecrit == 'f' or nodecrit == 'F':
+        curnode = fegvalues[0]
+        morenodes = 0
+    elif inode + 1 < len(nodes):
+        curnode = nodes[inode]
+        inode = inode + 1
+    else:
+        curnode = nodes[inode]
+        morenodes = 0
+        # Open Current node info file and return a list of nodestuff
+    nodestuff = pdh_files.rdinf(curnode)
+    #,nodename,nindex,nstart,nnpts,ndi,nunits)
+    nname=nodestuff[0]
+    nameindex=nodestuff[1]
+    sdepth=nodestuff[2]
+    nindexes=nodestuff[3]
+    indexunits=nodestuff[4]
+    di=nodestuff[5]
 
-curnode= fegvalues[0]
-mode=fegvalues[1]
-zone=fegvalues[2]
-rfconin=fegvalues[3]
-rfconout=fegvalues[4]
-nodecrit=fegvalues[5]
-rfnamin = prgnm + '_' + rfconin
-nodestuff=[]
-nodestuff= pdh_files.rdinf(curnode)
-#,nodename,nindex,nstart,nnpts,ndi,nunits)
-nname=nodestuff[0]
-nameindex=nodestuff[1]
-sdepth=nodestuff[2]
-nindexes=nodestuff[3]
-indexunits=nodestuff[4]
-di=nodestuff[5]
-# Setting up input for user where this goes depends a little on mode
-curpath=adnod.ns2path(curnode)
-sfn=pdh_files.fnm2num(curnode,'SF',rfconin)
-rfpathin = ' '
-if sfn != ' ':
-    rfpathin = curpath + r"/s."+sfn    # CURPATH + SF=NM2SFN(Curnode,PNAME,RFCON
-rfpathout = ' '
-sfn= pdh_files.fnm2num(curnode,'SF',rfconin)
+    # 1 OPEN AND READ SPEC FILE - Need PName to find SPECFile
+    #    Spec File contains - NIN NOUT for each input/output Label,Units,Default,Range
+    #    spec file is found in sys node for program program are at 3:1 each program
+    # Spec file is s.1 file not sure how to name py code under here
+    # also Help file is s.2 file
+    # NEED TO BUILD PROGRAM TO MAKE SPEC FILE, eventually build a shell program
+    curpath = adnod.ns2path(curnode)
 
-#pname = Ns2Prog             #
+    sphead=[]
+    sptypr=[]
+    splabs=[]
+    spdef=[]
+    spunits=[]
+    sphelp=[]
+    sprng=[]
+    stuff=pdh_files.rdspecf(sppath,sphead,sptypr,splabs,spdef,spunits,sphelp,sprng)
+    # SPEC file returned basic inputs that IP will ask user to input
+    nin=sphead[0]
+    nout=sphead[1]
 
-pathu="C:/PDH/USER"        # read the rfcon then search the user inf file for input rcfon
-usernum="4"                 # User Number from frend four how many do you want
-#stuff= adnod.un2path(uns,urpath)
-usfn="sf.1"                 # given user number open user s.0 , find urf =(upath, pname+rfconin)
+    # 2 GET Previous Inputs put in value lists for user and resolved
+    #  MODE           IN         OUT        IP        PROG
+    #   I            Data        Data      Full       Run
+    #   U            User        Data      Full       Run
+    #   R            Data        None      None       Run
+    #   M            Data        User      Partial    None
+    #   B            User        Data      None       None
+    # Setting up input for user where this goes depends a little on mode
+    rfhead = []
+    rfuivals = []
+    rfivals = []
+    rfuovals = []
+    rfovals = []
+    rfdepth = []
+    # Objective - on mode set up User Values- rfuvals and resolved values rfvals
+    # Find Run File in User or Data Node based on mode
+    rfnamin = prgnm + '_' + rfconin
+    if mode == 'I' or mode == 'R' or mode == 'M':
 
-# 1 OPEN AND READ SPEC FILE - Need PName to find SPECFile
-#    Spec File contains - NIN NOUT for each input/output Label,Units,Default,Range
-#    spec file is found in sys node for program program are at 3:1 each program
-# Spec file is s.1 file not sure how to name py code under here
-# also Help file is s.2 file
-# NEED TO BUILD PROGRAM TO MAKE SPEC FILE, eventually build a shell program
-paths="C:/PDH/System"      # adnod should do this
-pnode = "3:1:1"             #executable program file is under system node 3:1 spec file is s.1 (orlabeled SPEC)
-sppath=paths + r"/L1K1/L2K1/s.1" # This really should be found by program name
-sphead=[]
-sptypr=[]
-splabs=[]
-spdef=[]
-spunits=[]
-sphelp=[]
-sprng=[]
-stuff=pdh_files.rdspecf(sppath,sphead,sptypr,splabs,spdef,spunits,sphelp,sprng)
-# SPEC file returned basic inputs that IP will ask user to input
-nin=sphead[0]
-nout=sphead[1]
+        sfn = pdh_files.fnm2num(curnode, 'SF', rfnamin)
+        rfpathin = ' '
+        if sfn != ' ':
+            rfpathin = curpath + r"/s."+sfn
+        if rfpathin != ' ':
+            pdh_files.rdrf(rfpathin,rfhead,
+                rfuivals,rfivals,rfuovals,rfovals,rfdepth)
+            rfuvals = list(rfuivals+rfuovals)
+            rfvals = list(rfivals+rfovals)
+        else:
+            rfvals = [' '] * (int(nin) + int(nout))
+            rfuvals=list(spdef)
+    elif mode == 'U' or mode == 'B':
 
-# 2 GET Previous Inputs If Mode=U OPEN AND READ USER RUNFILE_IN If Mode=I read Data RF
-# Overlay defaults from Spec with UserVals
-if mode=='U':
-    urfpath=pathu + r"/L1K4/s.1"  # This is User 4 s.1 but should be Frend: User Num RFCON_IN
-    urfuvals=[]
-    urfdepths=[]
-    stuff=pdh_files.rdusrrf(urfpath,urfuvals) # This picks up last vals from user RF
-                                    # If interactive Need to walk thru these on curnode and resolve
-rfhead = []
-rfuivals = []
-rfivals = []
-rfuovals = []
-rfovals = []
-rfdepth = []
-if rfpathin != ' ':
-    pdh_files.rdrf(rfpathin,rfhead,rfuivals,rfivals,rfuovals,rfovals,rfdepth)
-    rfuvals=list(rfuivals+rfuovals)
-    rfvals=list(rfivals+rfovals)
-elif mode == 'U':
-    rfuvals=list(urfuvals)
-    rfvals=list(urfuvals)
-else:
-    rfuvals=list(spdef)
-    rfvals=list (spdef)
-# 3 Present User with Option to select Inputs
-w2c=''
-while w2c!='q':
-
+        urfuvals = [] * (int(nin) + int(nout))
+        urfdepths=[]
+        sfn = pdh_files.fnm2num(usernode,'SF',rfnamin)
+        if sfn != ' ':
+            urfpath = userpath + r'/s.' + sfn
+            stuff = pdh_files.rdusrrf(urfpath,urfuvals)
+            rfuvals=list(urfuvals)
+            rfvals=list(urfuvals)
+        else:
+            rfuvals=list(spdef)
+            rfvals = [' '] * (int(nin) + int(nout))
+    else:
+        rfuvals=list(spdef)
+        rfvals=list (spdef)
+    # 2b. Resolve uvals to val based on curnode - this may depend on node
     i=0
-    for a,b,c,d,e,f in zip(sptypr,splabs,rfuvals,spunits,sphelp,rfvals): # Main part of IP
-        print(str(i)+" " + e +" an "+ a +" variable named "+b+ " has a value of "+ c +" "+f+" "+d)
+    for a in rfuvals:
+        if a[0] == 'v':
+            vnum = pdh_files.fnm2num(curnode,'VF',a[1:])
+            if vnum == ' ':
+                vnum='-999.99'
+            rfvals[i]=vnum
+        elif a[0] == 'g':
+            gpval = pdh_files.rdgp(curnode,a[1:])
+            if gpval == ' ':
+                gpval = '-999.99'
+            rfvals[i]=gpval
+        elif a[0] == 'z':
+            zval= pdh_files.rdzp(curnode,zone,a[1:])
+            if zval == ' ':
+               zval = '-999.99'
+            rfvals[i]=zval
         i=i+1
-        # This is where GUI needs
-    w2c = input("Enter # of variable to change , q continue")
-    if w2c != 'q':
-        i2c=int(w2c)
-        newval= input("Enter value or vname for curve, gname GP zname for Zone")     #Need GUI
-        wnewval=newval
-        if newval[0]== 'v':      # will need to create new curve on exit
-            wnewval=newval[1:]  # assumed user input curvename needs conversion to curve #
-            wnewval = pdh_files.fnm2num(curnode,'VF',newval[1:])# vnum is # curve number #'' means not found
-            if wnewval ==' ':
-                print ("Robert VF file was not found - could be good or bad ")
-                                         # this gets written to runfile val list
-        if newval[0] == 'g':
-            wnewval = pdh_files.rdgp(curnode,newval[1:])
-            if wnewval == ' ':
-                print("Robert you need to do something GP not found")#Need to inform user of prence
-        if newval[0] == 'z':
-            wnewval= pdh_files.rdzp(curnode,zone,newval[1:])
-            if wnewval == ' ':
-                print("Robert you need to do something ZP not found")
+    # 3 Present User with Option to select Inputs based on mode != R or B need that
+    w2c=''
+    while w2c!='q':
 
-        rfuvals[i2c]=newval
-        rfvals[i2c]= wnewval                              # User input is translated
-for a,b,c in zip(splabs,rfuvals,rfvals):                        # from names to numbers
-    print (a,b,c)
+        i=0
+        for a,b,c,d,e,f in zip(sptypr,splabs,rfuvals,spunits,sphelp,rfvals): # Main part of IP
+            print(str(i)+" " + e +" an "+ a +" variable [ "+b+ "]  "+ c +" = "+f+" "+d)
+            i=i+1
+            # This is where GUI needs
+        w2c = input("Enter # of variable to change , q continue")
+        if w2c != 'q':
+            i2c=int(w2c)
+            newval= input("Enter value or vname for curve, gname GP zname for Zone")     #Need GUI
+            wnewval=newval
+            if newval[0]== 'v':      # will need to create new curve on exit
+                wnewval=newval[1:]  # assumed user input curvename needs conversion to curve #
+                wnewval = pdh_files.fnm2num(curnode,'VF',newval[1:])# vnum is # curve number #'' means not found
+                if wnewval ==' ':
+                    print ("Robert VF file was not found - could be good or bad ")
+                                             # this gets written to runfile val list
+            if newval[0] == 'g':
+                wnewval = pdh_files.rdgp(curnode,newval[1:])
+                if wnewval == ' ':
+                    print("Robert you need to do something GP not found")#Need to inform user of prence
+            if newval[0] == 'z':
+                wnewval= pdh_files.rdzp(curnode,zone,newval[1:])
+                if wnewval == ' ':
+                    print("Robert you need to do something ZP not found")
+
+            rfuvals[i2c]=newval
+            rfvals[i2c]= wnewval                              # User input is translated
+    for a,b,c in zip(splabs,rfuvals,rfvals):                        # from names to numbers
+        print (a,b,c)
 
 
-# 4 Here need iteration to Enter Depth Info
-#    N- whole node Z- Zone otherwise enter a Top/Base
-print ("Top Base "+sdepth)
-dtype=input('Enter Depth Type , N-Node Z-Zone '' or blank - enter top/base')
-if dtype == 'N' or dtype =='n':
-    sindex="1"
-    npts=nindexes
-elif dtype=="Z" or dtype =='z':
-    # need to get top base from Zone
-    fdend=float(sdepth)+float(nindexes)*float(di)-float(di)
-    dend=str(fdend)
-    sdep,edep=pdh_files.rdzone (curnode,zone)
-    if float(sdep)<float(sdepth)or float(sdep)>fdend:
-        sdep=sdepth
-    fedep=float(edep)
-    if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
-        edep=dend
-    sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
-    npts=str(int((float(edep)-float(sdep))/float(di)+1))
-    print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
-    dum=input('Hit return to continue')
-else:              # If Dtype=Z then zone Process- get Zone depths
-    dend=str(float(sdepth)+float(nindexes)*float(di)-float(di))
-    fdend=float(sdepth)+float(nindexes)*float(di)-float(di)
-    dend=str(fdend)
-    sdep=input('Data Start '+sdepth+' Enter start depth ')
-    if float(sdep)<float(sdepth)or float(sdep)>fdend:
-        sdep=sdepth
-    edep=input('Data End '+dend+' Enter end depth ')
-    fedep=float(edep)
-    if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
-        edep=dend
-    sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
-    npts=str(int((float(edep)-float(sdep))/float(di)+1))
-    print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
-    dum=input('Hit return to continue')
-# 5 User has made all input
-# Create any needed output curves
-for x in (int(nin),int(nin)+int(nout)-1):
-    if rfuvals[x][0]=='v' and rfvals[x]==' ': #create curve
-        rfvals[x]=pdh_files.crvf(curnode,rfuvals[x][1:],"na",nindexes) # need to set units
+    # 4 Here need iteration to Enter Depth Info
+    #Present User with Option to select Depths based on mode != R or B need that
+    #    N- whole node Z- Zone otherwise enter a Top/Base
+    print ("Top Base "+sdepth)
+    dtype=input('Enter Depth Type , N-Node Z-Zone '' or blank - enter top/base')
+    if dtype == 'N' or dtype =='n':
+        sindex="1"
+        npts=nindexes
+    elif dtype=="Z" or dtype =='z':
+        # need to get top base from Zone
+        fdend=float(sdepth)+float(nindexes)*float(di)-float(di)
+        dend=str(fdend)
+        sdep,edep=pdh_files.rdzone (curnode,zone)
+        if float(sdep)<float(sdepth)or float(sdep)>fdend:
+            sdep=sdepth
+        fedep=float(edep)
+        if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
+            edep=dend
+        sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
+        npts=str(int((float(edep)-float(sdep))/float(di)+1))
+        print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
+        dum=input('Hit return to continue')
+    else:              # If Dtype=Z then zone Process- get Zone depths
+        dend=str(float(sdepth)+float(nindexes)*float(di)-float(di))
+        fdend=float(sdepth)+float(nindexes)*float(di)-float(di)
+        dend=str(fdend)
+        sdep=input('Data Start '+sdepth+' Enter start depth ')
+        if float(sdep)<float(sdepth)or float(sdep)>fdend:
+            sdep=sdepth
+        edep=input('Data End '+dend+' Enter end depth ')
+        fedep=float(edep)
+        if fedep<float(sdepth)or fedep>fdend or fedep<float(sdep) :
+            edep=dend
+        sindex=str(int((float(sdep)-float(sdepth))/float(di)+1))
+        npts=str(int((float(edep)-float(sdep))/float(di)+1))
+        print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
+        dum=input('Hit return to continue')
+    # 5 User has made all input
+    # Create any needed output curves if MODE != R,M or B
+    # if MODE
+    if mode == 'I' or mode == 'U' :
 
-# Now update User Runfile (IN or OUT) with new vals depth info not needed
-# This depends on mode for now just rewriting
-if mode == 'U':
-    stuff = pdh_files.wrurf(urfpath,prgnm,nin,nout,rfuvals)
-#Create RF/UPdate RF in Curnode
-#Need to get DI data from curnode - also make sure float are handled correctly
-mxpts=nindexes
-if rfpathin == ' ':
-    rfpathin, nsf = pdh_files.nxtsf(curnode)
-    #append new SF record to sf and write new SF file
-    pdh_files.wrrecsf(curpath, str(nsf), rfnamin)
-          # from Curnode do I need this or should Shell know
-rfpathout=rfpathin    #this needs to be determined from RFCON
-# need to create rf record in inf file
-stuff =pdh_files.wrrf(rfpathout,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts)
-# At this point IP is done FREND should be able to execute prog with data node RFCON
+        for x in (int(nin),int(nin)+int(nout)-1):
+            if rfuvals[x][0]=='v' and rfvals[x]==' ': #create curve
+                rfvals[x]=pdh_files.crvf(curnode,rfuvals[x][1:],"na",nindexes) # need to set units
+
+    # Now update User Runfile (IN or OUT) with new vals depth info not needed
+    # This depends on mode for if M input is written back to User node need to update
+    # #  MODE           IN         OUT        IP        PROG
+    #   I            Data        Data      Full       Run
+    #   U            User        Data      Full       Run
+    #   R            Data        None      None       Run
+    #   M            Data        User      Partial    None
+    #   B            User        Data      None       None
+    #   also the user s.0 with a record
+    # First set what output file name is
+    rfnamout = prgnm + '_' + rfconout
+    if mode == 'M':
+        sfn = pdh_files.fnm2num(usernode,'SF',rfnamout)
+        if sfn != ' ':
+            urfpath = userpath + r"/s."+sfn
+            stuff = pdh_files.wrurf(urfpath,prgnm,nin,nout,rfuvals)
+        else:
+            urfpath,n=pdh_files.nxtsf(usernode)
+            pdh_files.wrrecsf(userpath,str(n),rfnamout)
+            stuff = pdh_files.wrurf(urfpath,prgnm,nin,nout,rfuvals)
+    #Create RF/UPdate RF in Curnode
+    #Need to get DI data from curnode - also make sure float are handled correctly
+    mxpts=nindexes
+    # if Mode = User or Interactive or Make  then write runfile to data node
+    if mode == 'U' or mode == 'I' or mode == 'B':
+        sfn = pdh_files.fnm2num(curnode, 'SF', rfnamout)
+        if sfn != ' ':
+            rfpathout = curpath + r"/s."+sfn
+            stuff =pdh_files.wrrf(rfpathout,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts)
+        else:
+            rfpathout, nsf = pdh_files.nxtsf(curnode)
+        #append new SF record to sf and write new SF file
+            pdh_files.wrrecsf(curpath, str(nsf), rfnamout)
+            stuff =pdh_files.wrrf(rfpathout,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts)
+
+    # At this point IP is done FREND should execute prog if correctwith data node RFCON
+    if mode != 'M':
+        print("I should run " + prgnm +" on node " + nname)
+    else:
+        print (" Just ran Make mode")

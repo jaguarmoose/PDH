@@ -10,4 +10,6 @@
 {'ZTop': '2000', 'Name': 'ZoneA', 'ZBase': '5000', 'Rtype': 'ZO'}
 {'Unit': ' ', 'Zone': 'ZoneA', 'Value': '.1951', 'Rtype': 'ZP', 'Name': 'Rw'}
 {'Name': 'Archie_RAF_Test', 'FileNum': '1', 'Rtype': 'SF'}
-{'Name': 'Archie_RAF_Test', 'FileNum': '2', 'Rtype': 'SF'}
+{'Name': 'Archie_Not_there', 'FileNum': '2', 'Rtype': 'SF'}
+{'Name': 'Archie_RAFOUT', 'FileNum': '3', 'Rtype': 'SF'}
+{'Rtype': 'SF', 'FileNum': '4', 'Name': 'Archie_LINDA'}

@@ -23,28 +23,51 @@ import operator
 if __name__ == '__main__':
     curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
     lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
-                                           
+
 else:
     lasfnm = input("Enter LAS File Name")
 
+def iterExample():
+    for i in range(10):
+        yield i
+
+print(next(iterExample()))
 lashan = open(lasfnm, 'r')
 try:
     #deque(parseLAS(file))
     parsedLAS = parseLAS(lashan)
     curves = []
     for line in parsedLAS:
-        if line[0] == 'ascii':
-            print(curves)
+        block,parsedLine = line
+        if block == 'ascii':
+            #print(curves)
+            #print(block,parsedLine,line)
             curveMatrix = zip(*map(operator.itemgetter(1), itertools.chain((line,),parsedLAS)))
             #print('\n'.join(map(str, curveMatrix)))
             break
-        elif line[0] == 'curve':
-            #print(line)
-            curves.append(line[1][0])
-
-    # print('\n'.join(map(str, parseLAS(lashan))))
+        elif block == 'curve':
+            curve, unit, api_code, description = parsedLine
+            print(block,parsedLine,line)
+            curves.append(curve)
+        #print('\n'.join(map(str, parseLAS(lashan))))
 except LASParseError as e:
     print(e,filepath)
+print("Here")
+print(len(curves))
+#curveData = list(curveMatrix)
+
+#for element in curveMatrix:
+#    print(element)
+#print(list(map(operator.itemgetter(1),curveData)))
+test = [
+[1, 2, 3],
+[4, 5, 6],
+[7, 8, 9]
+]
+print(test)
+print(list(zip(*test)))
+print(list(zip(test[0],test[1],test[2])))
+
 
 # line=''
 # while line[0:2]!='~A':

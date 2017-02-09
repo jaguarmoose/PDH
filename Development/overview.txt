@@ -3,14 +3,18 @@ Get SF files working
 Get dictionary alphabetical
 Get User Num Working
 Get call to program to working
+implement mode and zone in IP
 get RLAS DCf working
 Write write LAS
-Write 2nd Shell program
-
+Write 2nd Shell program at this point make sure sys node for progrs is working
+Write Hist
+Write Xplot
+Write Well log
+Write Shell
 Get Shell program to work
 
 
-
+Every record has an RTYPE
 
 Let check Shell program is working it is
 need to implement David LAS parser
