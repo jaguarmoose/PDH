@@ -1,0 +1,2 @@
+{'Rtype': 'HD', 'Name': 'well_name_1:1:4:12'}
+{'Units': 'Feet', 'Npts': '10401', 'Rtype': 'DI', 'Index': 'Depth', 'DI': '0.5', 'Start': '100.000'}

@@ -54,13 +54,14 @@ di = sdi
 stuff = pdh_files.crinf(curnode, label, iname, units, si, snind, di)  # INF create
 units = "not yet"
 icnm = 0
+curpath = adnod.ns2path(curnode)
 vpath = []
 fv = []
 ftmp = []
 iv = 0
 for cnm in cnames:
     v = pdh_files.crvf(curnode, cnm, units, ndeps)
-    vpath.append(v)
+    vpath.append(curpath + r'/v.' + v)
     f = open(vpath[iv], 'r')
     fv.append(f)
     ft = open(vpath[iv] + r"_tmp", 'w')

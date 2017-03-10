@@ -339,7 +339,7 @@ def rdspecf(sppath,sphead,sptypr,splabs,spdef,spunits,sphelp,sprng):
                 sprng.append(d['range'])
     sphan.close()
     return
-def rdusrrf(urfpath,urfuvals):
+def rdusrrf(urfpath,urfuvals,dt):
     import ast
     import sys
     urfhan=open(urfpath,'r') # Open User Run File
@@ -349,8 +349,8 @@ def rdusrrf(urfpath,urfuvals):
             d=ast.literal_eval(line) # line is now a dictionary
             if d['Rtype']== 'IN' or d['Rtype']== 'OUT':
                 urfuvals.append(d['uval']) #
-            #elif d['Rtype'] == 'DEPTH':
-            #    urfdepths.append(d['TYPE'])
+            elif d['Rtype'] == 'DEPTH':
+                dt.append(d['Type'])
             #    urfdepths.append(d['Start'])
             #    urfdepths.append(d['End'])
     urfhan.close()
@@ -377,7 +377,7 @@ def wrrf(rfpath,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts):
     rfhan.write(s + '\n')
     rfhan.close()
     return
-def wrurf(rfpath,prgnm,nin,nout,rfuvals):
+def wrurf(rfpath,prgnm,nin,nout,rfuvals,dt):
     # biggest way this differs from runfile is depth is in DI units and curves GPs are named
     import sys
     rfhan=open(rfpath,'w')
@@ -395,8 +395,8 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals):
             s=str(recrfvl)
             rfhan.write(s + '\n')
         i=i+1
-#    recrfdep= {'Rtype': 'DEPTH','Type':'','Start': start,'End': end}
-#    s=str(recrfdep)
+    recrfdep= {'Rtype': 'DEPTH','Type': dt,'Start': start,'End': end}
+    s=str(recrfdep)
     rfhan.write(s + '\n')
     rfhan.close()
     return
@@ -518,3 +518,44 @@ def wrnodesf(usernode, nodesfnam, nodes, nodenames):
 
 if __name__ == '__main__':
     wrnodesf()
+
+def unm2uns(username):    # convert user name to user number
+    import os
+    import ast
+    urrpath = r'C:\PDH\USER\L1K1\L2K'
+    uns = ''
+    i = 4
+    urpath = urrpath + str(i) + r'\s.0'
+    while os.path.exists(urpath):
+        uh = open(urpath, 'r')
+        for line in uh.readlines():
+            line = line.strip("\n")
+            if len(line) > 1 and line[0] == "{":
+                d = ast.literal_eval(line)  # line is now a dictionary
+                if d['Name'] == username:
+                    uns = "2:1:" + str(i)
+                    uh.close()
+                    return uns
+        i = i+1
+        urpath = urrpath + str(i) + r'\s.0'
+    return uns
+def prnm2spath(progname): #program name to program number
+    import os
+    import ast
+    prrpath = r'C:\PDH\System\L1K1\L2K'
+    progspath=" "
+    i = 1
+    prpath = prrpath + str(i) + r'\s.0'
+    while os.path.exists(prpath):
+        ph = open(prpath, 'r')
+        line = ph.readline()
+        d = ast.literal_eval(line)  # line is now a dictionary
+        if d['Prgnm'] == progname:
+            print("Found Program")
+            ph.close()
+            progspath= prrpath + str(i) + r'\s.1'
+            return progspath
+        ph.close
+        i = i+1
+        prpath = prrpath + str(i) + r'\s.0'
+    return progspath

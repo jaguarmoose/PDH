@@ -1,0 +1,14 @@
+{'Name': 'well_name_1:1:4:18', 'Rtype': 'HD'}
+{'Start': '1960', 'DI': '0.5', 'Rtype': 'DI', 'Index': 'Depth', 'Npts': '6801', 'Units': 'Feet'}
+{'Name': 'DEPTH', 'FileNum': '1', 'Rtype': 'VF', 'Units': 'not yet'}
+{'Name': 'PE', 'FileNum': '2', 'Rtype': 'VF', 'Units': 'not yet'}
+{'Name': 'DPHI', 'FileNum': '3', 'Rtype': 'VF', 'Units': 'not yet'}
+{'Name': 'NPHI', 'FileNum': '4', 'Rtype': 'VF', 'Units': 'not yet'}
+{'Name': 'GR', 'FileNum': '5', 'Rtype': 'VF', 'Units': 'not yet'}
+{'Name': 'AHT90', 'FileNum': '6', 'Rtype': 'VF', 'Units': 'not yet'}
+{'FileNum': '7', 'Units': 'na', 'Name': 'SW_RAF', 'Rtype': 'VF'}
+{'FileNum': '1', 'Name': 'Archie_RAFOUT', 'Kind': '', 'Rtype': 'SF'}
+{'FileNum': '2', 'Name': 'Hist_RAFOUT', 'Kind': '', 'Rtype': 'SF'}
+{'FileNum': '3', 'Name': 'XPlot_RAFOUT', 'Kind': '', 'Rtype': 'SF'}
+{'FileNum': '4', 'Name': 'WLPlot_RAFOUT', 'Kind': '', 'Rtype': 'SF'}
+{'Rtype': 'SF', 'Kind': '', 'Name': 'XPlot_OUTU', 'FileNum': '5'}

@@ -22,11 +22,15 @@ import operator
 
 if __name__ == '__main__':
     curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
-    lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
-
+    #lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
+    lasfnm="C:\PDH\Development\LAS\LAS Files\KGS-Cimarex\KGS-Cimarex.las"
 else:
     lasfnm = input("Enter LAS File Name")
 
+# Enter Parent Node string
+pns="1:1:4"
+# assume 1 file / well
+curnode = adnod.nxtkid(pns)
 def iterExample():
     for i in range(10):
         yield i
@@ -37,6 +41,7 @@ try:
     #deque(parseLAS(file))
     parsedLAS = parseLAS(lashan)
     curves = []
+    cunits = []
     for line in parsedLAS:
         block,parsedLine = line
         if block == 'ascii':
@@ -47,15 +52,16 @@ try:
             break
         elif block == 'curve':
             curve, unit, api_code, description = parsedLine
-            print(block,parsedLine,line)
+            #print(block,parsedLine,line)
             curves.append(curve)
+            cunits.append(unit)
         #print('\n'.join(map(str, parseLAS(lashan))))
 except LASParseError as e:
     print(e,filepath)
 print("Here")
 print(len(curves))
-#curveData = list(curveMatrix)
-
+curveData = list(curveMatrix)
+print(curves[0])
 #for element in curveMatrix:
 #    print(element)
 #print(list(map(operator.itemgetter(1),curveData)))
@@ -67,96 +73,46 @@ test = [
 print(test)
 print(list(zip(*test)))
 print(list(zip(test[0],test[1],test[2])))
-
-
-# line=''
-# while line[0:2]!='~A':
-#    print(line[0:2])
-#    line=lashan.readline()
-# print('here')
-# line=line.strip("\n")
-# cnames=line.split()
-# cnames.pop(0)   # removes leading ~A from list
-# # should be a curve data start line now split names
-# ncurves=len(cnames)    # Splits
-# # build
-# # determine Start Depth DI and End Depth
-# # Read still EOF
-# line=lashan.readline()
-# line=line.strip("\n")
-# cvals=line.split()
-# sdepth=cvals[0]
-# line=lashan.readline()
-# line=line.strip("\n")
-# cvals=line.split()
-# sdepth2=cvals[0]
-# sdi=str(float(sdepth2)-float(sdepth))
-# ndeps=2
-# while line !=''and line !=' ' :
-#    line=lashan.readline()
-#    ndeps=ndeps+1
-#    cvals=line.split()
-#    if len(cvals)> 0:
-#        edepth=cvals[0]
-#   # print (edepth)
-# lashan.close()
-# label="well_name_"+curnode
-# iname="Depth"
-# units="Feet"
-# si=sdepth
-# snind=str(ndeps)
-# di=sdi
-# stuff=pdh_files.crinf(curnode,label,iname,units,si,snind,di)# INF create
-# units="not yet"
-# icnm=0
-# vpath=[]
-# fv=[]
-# ftmp=[]
-# iv=0
-# for cnm in cnames:
-#    v = pdh_files.crvf(curnode, cnm, units,ndeps)
-#    vpath.append(v)
-#    f=open(vpath[iv],'r')
-#    fv.append(f)
-#    ft=open(vpath[iv] + r"_tmp",'w')
-#    ftmp.append(ft)
-#    iv=iv+1
-# sinx=1
-# ninx=1
-# minx=ndeps
-# lashan=open(lasfnm,'r')
-# line=' '
-# ic=0
-# #Startswith
-# while line[0:2]!='~A':
-#    line=lashan.readline()
-# while line !=''and line !=' ' :
-#    line=lashan.readline()
-#    cvals=line.split()
-#    if len(cvals)> 0 and ic < minx:
-#        ic=ic+1
-#                    # first loop until start index
-#        if ic < sinx or ic > sinx+minx-1 :   # and loop after end index
-#            ir=0
-#            for vf in fv:
-#                dum=vf.readline()
-#                dum=dum.strip('\n')
-#                ftmp[ir].write(dum+'\n')
-#                ir=ir+1
-#        else:                          # In indexes that need calculation
-#            icv=0
-#            ir=0
-# #for vf,tvf in fv,ftmp:
-#            for vf in fv:
-#                dum=vf.readline()
-#                ftmp[ir].write(cvals[icv]+'\n')
-#                icv=icv+1
-#                ir=ir+1
-# for vf in fv:
-#    vf.close()
-# for tvf in ftmp:
-#    tvf.close()
-# for vp in vpath:
-#    os.remove(vp)
-#    os.rename(vp +r"_tmp",vp)
-# print ("End")
+depths = curveData[0]
+# # determine Start Depth DI and End Depth assumes Depth is first curve and
+# assumes Depth increase and there is more than 1 value of Depth
+di = float(depths[1]) - float(depths[0])
+sdi = str(di)
+print(sdi)
+label = "well_name_" + curnode
+iname = "Depth"
+units = "Feet"
+si = depths[0]
+nind = int((float(depths[-1]) - float(depths[0]))/di + 1)
+snind = str(nind)
+print(depths[0], depths[-1], sdi)
+print(snind)
+stuff = pdh_files.crinf(curnode, label, iname, units, si, snind, sdi)
+units = "not yet"
+icnm = 0
+vpath = []
+curpath = adnod.ns2path(curnode)
+fv = []
+ftmp = []
+iv = 0
+# created all new files - NOT MERGING - just write the rectangle of data
+for cnm in curves:
+    v = pdh_files.crvf(curnode, cnm, units, snind)
+    vpath.append(curpath + r'/v.' + v)
+    f = open(vpath[iv], 'w')
+    fv.append(f)
+    iv = iv+1
+print(vpath)
+sinx = 1
+ninx = 1
+minx = nind
+ic = 0
+for vf in fv:
+    ix = 0
+    while ix < nind:
+        vf.write(curveData[ic][ix] + '\n')
+        ix = ix + 1
+    ic = ic + 1
+for vf in fv:
+    vf.close()
+print("End")

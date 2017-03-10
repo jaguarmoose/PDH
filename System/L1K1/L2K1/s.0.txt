@@ -1,2 +1,0 @@
-{'Rtype': 'HD', 'Prgnm':'Archie','NIN':'6','NOUT':'1'}
- 

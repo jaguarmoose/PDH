@@ -19,15 +19,17 @@ import pdh_files
 #,$ZONE,$NODECRIT,$RFCON
 # Also may need to think about a non-zone container
 #though node GP may handle
-
-prgnm= "Archie"
+# Steps to determine User Info
+#     Based on User Name User Tree is searched for User num and User Node String is constructed
+username = "Robert Farnan"   # This needs to be case insenstive
+usernode = pdh_files.unm2uns(username)
+sppath= ' '
+while sppath == ' ':
+    prgnm= input('Enter Program Name')
+    sppath = pdh_files.prnm2spath(prgnm)
+print(sppath)
 pathd= "C:/PDH/DATA"        # adnod needs work
-paths="C:/PDH/System"      # adnod should do this
-pnode = "3:1:1"             #executable program file is under system node 3:1 spec file is s.1 (orlabeled SPEC)
-sppath=paths + r"/L1K1/L2K1/s.1" # This really should be found by program name
 pathu="C:/PDH/USER"        # All this sets up User paths needs subroutine
-usernum="4"                 # User Number from frend four how many do you want
-usernode = "2:1:" + usernum
 userpath = adnod.uns2path(usernode)
 urfdepths = ['']
 
@@ -126,7 +128,6 @@ while morenodes > 0:
     # Find Run File in User or Data Node based on mode
     rfnamin = prgnm + '_' + rfconin
     if mode == 'I' or mode == 'R' or mode == 'M':
-
         sfn = pdh_files.fnm2num(curnode, 'SF', rfnamin)
         rfpathin = ' '
         if sfn != ' ':
@@ -182,7 +183,7 @@ while morenodes > 0:
 
         i=0
         for a,b,c,d,e,f in zip(sptypr,splabs,rfuvals,spunits,sphelp,rfvals): # Main part of IP
-            print(str(i)+" " + e +" an "+ a +" variable [ "+b+ "]  "+ c +" = "+f+" "+d)
+            print(str(i)+" " + e +" an "+ a +" variable [ "+b+ "]  " + c +" = "+f+" "+d)
             i=i+1
             # This is where GUI needs
         w2c = input("Enter # of variable to change , q continue")
@@ -242,7 +243,7 @@ while morenodes > 0:
         urfdepths[0]=dtype
         print (" Dtype= "+ urfdepths[0])
         print("start depth:index "+sdep+":"+sindex+" end dep:npts "+edep+" "+npts)
-        
+
         dum=input('Hit return to continue')
     else:              # If Dtype not Z or N then get depths
         dend=str(float(sdepth)+float(nindexes)*float(di)-float(di))
@@ -264,14 +265,16 @@ while morenodes > 0:
     # Create any needed output curves if MODE != R,M or B
     # if MODE
     if mode == 'I' or mode == 'U' :
-
-        for x in (int(nin),int(nin)+int(nout)-1):
-            if rfuvals[x][0]=='v' and rfvals[x]==' ': #create curve
-                rfvals[x]=pdh_files.crvf(curnode,rfuvals[x][1:],"na",nindexes) # need to set units
+        if int(nout) > 0:
+            for x in range(int(nin),int(nin)+int(nout)-1):
+                print(rfuvals[x]+" " +rfvals[x])
+                if rfuvals[x][0]=='v' and rfvals[x]==' ': #create curve
+                    rfvals[x]=pdh_files.crvf(curnode,rfuvals[x][1:],"na",nindexes) # need to set units
 
     # Now update User Runfile (IN or OUT) with new vals depth info not needed
     # This depends on mode for if M input is written back to User node need to update
     # #  MODE           IN         OUT        IP        PROG
+
     #   I            Data        Data      Full       Run
     #   U            User        Data      Full       Run
     #   R            Data        None      None       Run

@@ -13,3 +13,11 @@
 {'Name': 'Archie_Not_there', 'FileNum': '2', 'Rtype': 'SF'}
 {'Name': 'Archie_RAFOUT', 'FileNum': '3', 'Rtype': 'SF'}
 {'Rtype': 'SF', 'FileNum': '4', 'Name': 'Archie_LINDA'}
+{'Rtype': 'VF', 'FileNum': '9', 'Units': 'na', 'Name': 'SW_220'}
+{'Rtype': 'SF', 'FileNum': '5', 'Name': 'Archie_OUT220', 'Kind': ''}
+{'Rtype': 'SF', 'Name': 'Archie_OUTU', 'Kind': '', 'FileNum': '6'}
+{'Rtype': 'VF', 'Name': 'SW_2', 'Units': 'na', 'FileNum': '10'}
+{'Name': 'Hist_OUTU', 'Kind': '', 'Rtype': 'SF', 'FileNum': '8'}
+{'Rtype': 'VF', 'FileNum': '11', 'Units': 'na', 'Name': 'SW_ok'}
+{'FileNum': '12', 'Rtype': 'VF', 'Units': 'na', 'Name': 'SW_3'}
+{'FileNum': '9', 'Kind': '', 'Rtype': 'SF', 'Name': 'XPlot_OUTU'}
