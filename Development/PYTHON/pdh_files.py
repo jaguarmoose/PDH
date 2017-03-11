@@ -399,7 +399,7 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals,dt):
     s=str(recrfdep)
     rfhan.write(s + '\n')
     rfhan.close()
-    return
+    
 def fnm2num(curnode,rtype,fname,kind=''):
                 # open s.0 for curnode
                 # read records looking for match to file type and name
