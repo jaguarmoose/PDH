@@ -1,3 +1,5 @@
+"""Input Processor Module"""
+
 import sys
 import getopt
 import adnod
