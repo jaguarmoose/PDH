@@ -1,11 +1,10 @@
 import re
 import os
-import sys
-import traceback
 from collections import deque
 
 
 def getSection(match):
+    """get section name from first Upper character"""
     return {
         'A': 'ascii',
         'C': 'curve',
@@ -16,10 +15,11 @@ def getSection(match):
     }[match]
 
 
-parameterRule = re.compile(u'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
+__ParameterRule__ = re.compile(r'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
 
 
 def parseLAS(lines):
+    """Pass in raw las file lines"""
     sep = None
     version = None
     wrap = None
@@ -37,14 +37,16 @@ def parseLAS(lines):
             try:
                 currentSection = getSection(line.strip()[1:2].upper())
             except:
-                raise LASParseError("Unknown Section: {} at Line#: {}".format(line.strip(),i))
+                raise LASParseError(
+                    "Unknown Section: {} at Line#: {}".format(line.strip(), i))
         if line.strip().startswith('#') or currentSection == 'other':
             yield('comment', line)
         elif currentSection != 'ascii':
             match = parameterRule.match(line)
             if match:
                 # Split common line format into pieces and clean
-                parameter, unit, value, description = map(str.strip, match.groups())
+                parameter, unit, value, description = map(
+                    str.strip, match.groups())
                 if version is not None and version < 2:
                     value, description = description, value
                 if currentSection == 'version':
@@ -80,19 +82,24 @@ def parseLAS(lines):
                 else:
                     values = line.split(sep)
                 if len(values) != len(curves):
-                    raise LASParseError("Mismatch Length of Curves: {} and Values: {} for Line#: {}".format(stop, values[0], curves[0], line))
+                    raise LASParseError("Mismatch Length of Curves: {} and Values: {} for Line#: {}".format(
+                        values[0], curves[0], line))
                 else:
                     if firstLine:
                         firstLine = False
                         if float(strt) != float(values[0]):
                             if float(stop) == float(values[0]):
-                                raise LASParseError("Stop Value: {} matches First Value: {} in Reference: {} for Line#: {}".format(stop, values[0], curves[0], line))
+                                raise LASParseError("Stop Value: {} matches First Value: {} in Reference: {} for Line#: {}".format(
+                                    values[0], curves[0], line))
                             else:
-                                raise LASParseError("Start Value: {} does not match First Value: {} in Reference: {} for Line#: {}".format(strt, values[0], curves[0], line))
+                                raise LASParseError("Start Value: {} does not match First Value: {} in Reference: {} for Line#: {}".format(
+                                    strt, values[0], curves[0], line))
                     yield (currentSection, values)
 
             if float(stop) != float(values[0]):
-                raise LASParseError("Stop Value: {} does not match Last Value: {} in Reference: {} for Line#: {}".format(stop, values[0], curves[0], line))
+                raise LASParseError("Stop Value: {} does not match Last Value: {} in Reference: {} for Line#: {}".format(
+                    stop, values[0], curves[0], line))
+
 
 class LASParseError(Exception):
     pass
@@ -106,14 +113,15 @@ if __name__ == '__main__':
         for filename in files:
             if filename.lower().endswith('.las'):
                 filepath = os.path.join(root, filename)
-                with open(filepath, 'r') as file:
+                with open(filepath, 'r') as las_file:
                     try:
-                        deque(parseLAS(file))
+                        deque(parseLAS(las_file))
                         # print('\n'.join(map(str, parseLAS(lashan))))
                     except LASParseError as e:
-                        print(e,filepath)
+                        print(e, filepath)
                         # exc_type, exc_obj, tb = sys.exc_info()
                         # f = tb.tb_frame
                         # lineno = tb.tb_lineno
                         # python_filename = f.f_code.co_filename
-                        # print 'EXCEPTION {}, FILE {}, {}'.format(type(e).__name__,filepath, e)
+                        # print 'EXCEPTION {}, FILE {},
+                        # {}'.format(type(e).__name__,filepath, e)
