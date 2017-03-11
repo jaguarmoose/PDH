@@ -1,3 +1,5 @@
+"""Old LAS Parser"""
+
 import re
 import os
 from collections import deque
