@@ -21,9 +21,9 @@ import operator
 #   output curves to curves
 
 if __name__ == '__main__':
-    curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
-    #lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
-    lasfnm="C:\PDH\Development\LAS\LAS Files\KGS-Cimarex\KGS-Cimarex.las"
+    pns = "1:1:4"  # frend provides curnode working in 1:4 for test
+    lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
+    #lasfnm="C:\PDH\Development\LAS\LAS Files\KGS-Cimarex\KGS-Cimarex.las"
 else:
     lasfnm = input("Enter LAS File Name")
 

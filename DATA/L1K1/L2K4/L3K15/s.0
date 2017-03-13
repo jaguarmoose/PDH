@@ -1,5 +1,5 @@
 {'Rtype': 'HD', 'Name': 'well_name_1:1:4:15'}
-{'Units': 'Feet', 'Rtype': 'DI', 'DI': '0.5', 'Start': '1960', 'Index': 'Depth', 'Npts': '6802'}
+{'Units': 'Feet', 'Rtype': 'DI', 'DI': '0.5', 'Start': '1960', 'Index': 'Depth', 'Npts': '6801'}
 {'Rtype': 'VF', 'Units': 'not yet', 'FileNum': '1', 'Name': 'DEPTH'}
 {'Rtype': 'VF', 'Units': 'not yet', 'FileNum': '2', 'Name': 'PE'}
 {'Rtype': 'VF', 'Units': 'not yet', 'FileNum': '3', 'Name': 'DPHI'}
@@ -12,3 +12,8 @@
 {'FileNum': '9', 'Units': 'na', 'Rtype': 'VF', 'Name': 'VSH_ND'}
 {'Rtype': 'VF', 'Name': 'VSH_N', 'Units': 'na', 'FileNum': '10'}
 {'Kind': '', 'Rtype': 'SF', 'FileNum': '2', 'Name': 'VShale_OUTU'}
+{'Rtype': 'SF', 'Name': 'VShale_dcf', 'FileNum': '3', 'Kind': ''}
+{'Kind': '', 'FileNum': '4', 'Name': 'CStats_dcf', 'Rtype': 'SF'}
+{'Unit': 'units', 'Name': 'Mean', 'Value': '47.04883246896122', 'Rtype': 'GP'}
+{'Unit': 'units', 'Name': 'NonNull', 'Value': '6363', 'Rtype': 'GP'}
+{'Unit': 'units', 'Name': 'Num_Good', 'Value': '6700', 'Rtype': 'GP'}

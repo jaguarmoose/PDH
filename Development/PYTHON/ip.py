@@ -288,11 +288,11 @@ while morenodes > 0:
         sfn = pdh_files.fnm2num(usernode, 'SF', rfnamout)
         if sfn != ' ':
             urfpath = userpath + r"/s."+sfn
-            stuff = pdh_files.wrurf(urfpath, prgnm, nin, nout, rfuvals, urfdepths)
+            stuff = pdh_files.wrurf(urfpath, prgnm, nin, nout, rfuvals, dtype)
         else:
             urfpath, n = pdh_files.nxtsf(usernode)
             pdh_files.wrrecsf(userpath, str(n), rfnamout)
-            stuff = pdh_files.wrurf(urfpath, prgnm, nin, nout, rfuvals, urfdepths)
+            stuff = pdh_files.wrurf(urfpath, prgnm, nin, nout, rfuvals, dtype)
     # Create RF/UPdate RF in Curnode
     # Need to get DI data from curnode - also make sure float are handled correctly
     mxpts = nindexes

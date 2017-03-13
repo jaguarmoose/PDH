@@ -17,7 +17,7 @@ import adnod
 import pdh_files
 import os
 username = "Robert Farnan"   # This needs to be case insenstive
-prgnm = 'VShale' # Enter Program Name
+prgnm = 'CStats' # Enter Program Name
 usernode = pdh_files.unm2uns(username)
 sppath = pdh_files.prnm2spath(prgnm)
 print(sppath)
@@ -34,9 +34,7 @@ curnode = fegvalues[0]
 zone = fegvalues[2]
 rfconout = fegvalues[4]
 rfnamin = rfconout
-path = adnod.ns2path(curnode)
 print(prgnm + rfnamin + curnode)
-
 path = adnod.ns2path(curnode)
 #  Open the runfile in Curnode
 rflab = prgnm + "_" + rfnamin
@@ -86,6 +84,10 @@ for v in rfuovals:
     i = i+1
 
 # all handles and files should open and ready now thru the depth loop
+# here place any before depth loop info
+good_values=0
+good_discrim_values=0
+sum_civ=0
 ic = 1
 #  first loop until start index and after end index
 while ic <= mxpts:
@@ -118,50 +120,19 @@ while ic <= mxpts:
 #  Now insert User calculation -
 #  ilabs=["gr","grmin","grmax","grtyp","NPHI","DPHI","NPHIMin","NPHIMax","ND-sep","VSH_GR",VSH_N","VSH_ND"]
         print(ic)
-        gr = float(ivals[0])
-        grmin = float(ivals[1])
-        grmax = float(ivals[2])
-        grtyp = float(ivals[3])
-        nphi = float(ivals[4])
-        dphi = float(ivals[5])
-        nphimin = float(ivals[6])
-        nphimax = float(ivals[7])
-        ndsep = float(ivals[8])
-# GR logic
-        if gr > 0 and grmin > 0 and grmax > 0 and grtyp > 0 and grmax > grmin:
-            if gr < grmin:
-                gr = grmin
-            if gr > grmax:
-                  gr=grmax
-            grc=(gr-grmin)/(grmax-grmin)
-        else:
-            grc = -999.99
-# NPHI VClay logic
-        if nphi > 0 and nphimin >0 and nphimax > 0 and nphimax > nphimin:
-            if nphi < nphimin:
-                nphi = nphimin
-            if nphi > nphimax:
-                nphi = nphimax
-            nphic = (nphi-nphimin)/(nphimax-nphimin)
-        else:
-            nphic = -999.99
-# ND sep logic
-        if nphi > 0 and dphi >0 and ndsep > 0 :
-            nd = nphi-dphi
-            if nd < 0 :
-                nd = 0
-            if nd > ndsep:
-                nd= ndsep
-            ndc = nd/ndsep
-        else:
-            ndc = -999.99
+        civ = float(ivals[0])
+        cmin = float(ivals[1])
+        cmax = float(ivals[2])
+        
+# Mean logic
+        if civ!= -999.25 and civ != -999.99:
+            good_values=good_values +1
+            if civ >= cmin and civ <= cmax:
+                good_discrim_values= good_discrim_values + 1
+                sum_civ= sum_civ + civ
+
 # assign outputs
-# 'VSH_GR', 'help': 'VShale Gamma Ray', 'range': '', 'def': 'vVSH_GR', 'NUM': '0'}
-# 'VSH_Neutron', 'help': 'VShale Neutron', 'range': '', 'def': 'vVSH_N', 'NUM': '1'}
-# 'VSH_ND Separation', 'help': 'VShale from Neutron Density Separation', 'range': '', 'def': 'vVSH_ND', 'NUM': '2'}
-        ovals[0]= str(grc)
-        ovals[1] = str(nphic)
-        ovals[2] = str(ndc)
+
         h = 0
         for v in ohan:
             if v == "":
@@ -179,6 +150,7 @@ for w in inhan:
         w.close()
     i = i+1
 i = 0
+#  Loop thur handles to close ins outs and temps
 for w in ohan:
     if rfuovals[i][0] == "v":
         w.close()
@@ -188,7 +160,24 @@ for w in ohan:
         os.remove(vpath)
         os.rename(vtmp, vpath)
     i = i+1
-#  Loop thur handles to close ins outs and temps
 
 # if you have zone ouput then that wil be handled here
-# also need to handle case where constant is spec'd for output -
+# also need to handle case where constant is spec'd for output
+mean_civ = sum_civ/good_discrim_values
+ovals[0]=str(mean_civ)
+ovals[1]=str(good_discrim_values)
+ovals[2]=str(good_values)
+infpath = path + r'/s.0'
+i=0
+for v in rfuovals:
+    if v[0] == 'g':
+        stuff = pdh_files.wrgp(infpath,v[1:],ovals[i],"units")
+    if v[0] == 'z':
+       top,base = rdzone (curnode,zname) 
+       if top != ' ':
+           stuff = pdh_files.wrzp(curnode,zone,v[1:],ovals[i],"units")
+       else:
+           print('Zone does not exist')
+    i=i+1       
+
+print( str( mean_civ) + str(good_discrim_values))
