@@ -395,7 +395,7 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals,dt):
             s=str(recrfvl)
             rfhan.write(s + '\n')
         i=i+1
-    recrfdep= {'Rtype': 'DEPTH','Type': dt,'Start': start,'End': end}
+    recrfdep= {'Rtype': 'DEPTH','Type': dt,'Start': 'start','End': 'end'}
     s=str(recrfdep)
     rfhan.write(s + '\n')
     rfhan.close()
