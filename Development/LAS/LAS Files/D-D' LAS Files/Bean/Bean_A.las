@@ -26,6 +26,8 @@
  DEPT.FT                   :   Depth in Feet
  GR  .GAPI                 :   Gamma Ray
  RHOB.G/C3                 :   Bulk Density
+ NULL.                                       -999.2500:
+ COMP.                                                :     COMPANY
 #
 ~A  DEPTH         GR       RHOB  
    100.000     59.449      2.705 

@@ -23,7 +23,7 @@ CMNT1.       API SERIAL #3406720737         : COMMENT 1
 RGE.         1                              : RANGE           
 CNTY.        HARRISON                       : COUNTY          
 LOC.         250'SL & 200'WL OF NE/4 SEC 29 : LOCATION DESC   
-#~TOPS
+~TOPS
 BEREA                 1293.00
 BIG LIME              4178.00
 ORISKANY              4332.00

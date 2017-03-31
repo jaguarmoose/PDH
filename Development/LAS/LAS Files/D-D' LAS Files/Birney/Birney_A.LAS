@@ -23,7 +23,7 @@ CMNT1.       PERMIT #P-103                  : COMMENT 1
 RGE.         1                              : RANGE           
 CNTY.        HARRISON                          : COUNTY          
 LOC.         1266'FNL & 1966'FWL OF NW1/4   : LOCATION DESC   
-#~TOPS
+~TOPS
 INJUN                  815.00
 BEREA                 1410.00
 DEV. SHALE            1460.00

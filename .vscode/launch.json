@@ -11,6 +11,23 @@
             "cwd": "${workspaceRoot}",
             "env": null,
             "envFile": "${workspaceRoot}/.env",
+            "console": "internalConsole"
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        {
+            "name": "PythonTerminal",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "${config.python.pythonPath}",
+            "program": "${file}",
+            "cwd": "${workspaceRoot}",
+            "env": null,
+            "envFile": "${workspaceRoot}/.env",
             "console": "externalTerminal"
             "debugOptions": [
                 "WaitOnAbnormalExit",

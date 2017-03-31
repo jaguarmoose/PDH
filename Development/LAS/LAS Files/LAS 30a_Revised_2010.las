@@ -25,8 +25,8 @@
  LONG.DEG                           -102.34567 : Longitude  {F}
  GDAT .       NAD83                            : Geodetic Datum
 # Lat & Long can also be presented as:
-# LATI .       45.37° 12' 58"                   : X LOCATION
-# LONG .       13.22° 30' 09"                   : Y LOCATION
+# LATI .       45.37ï¿½ 12' 58"                   : X LOCATION
+# LONG .       13.22ï¿½ 30' 09"                   : Y LOCATION
  UTM  .                                        : UTM LOCATION
 
 ~Log_Parameter
