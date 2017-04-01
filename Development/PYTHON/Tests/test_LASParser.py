@@ -1,20 +1,20 @@
-"""Test LASParser Module"""
+'''Test LASParser Module'''
 import unittest
 
 class TestLASParser(unittest.TestCase):
-    """Test LasParser Class"""
+    '''Test LasParser Class'''
 
     # preparing to test
     def setUp(self):
-        """ Setting up for the test """
+        ''' Setting up for the test '''
         #LASParser()
 
     def test_getSection_Exception(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         self.assertEqual(LASParser.getSection("B"), "B")
 
     def test_parseSectionLine_Exception(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         self.assertEqual(LASParser.parseSectionLine('~Test_Section[1]'),
             'TEST_SECTION')
         self.assertEqual(LASParser.parseSectionLine('~'),
@@ -23,17 +23,17 @@ class TestLASParser(unittest.TestCase):
             None)
 
     def test_parseLAS_Comment(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         self.assertEqual(next(LASParser().parseLAS(['#test'])),
             ('COMMENT', '#test'))
 
     def test_parseLAS_Blank(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         self.assertEqual(next(LASParser().parseLAS([' ']), None),
             None)
 
     def test_parseParameterLine_General(self):
-        """Test General Paramater Permutations"""
+        '''Test General Paramater Permutations'''
         self.assertEqual(LASParser.parseParameterLine(
             "DATE .       13/12/1986  : LOG DATE  {DD/MM/YYYY}"),
             ('DATE', '', '13/12/1986', 'LOG DATE  {DD/MM/YYYY}', ''))
@@ -45,7 +45,7 @@ class TestLASParser(unittest.TestCase):
             ('UTM', '', '', 'UTM LOCATION', ''))
 
     def test_parseLAS_WellBlock_Null(self):
-        """Test Well Block Section Key Parameters"""
+        '''Test Well Block Section Key Parameters'''
         parser = LASParser()
         parser.current_section = 'WELL'
         parser.line_type = 'PARAMETER'
@@ -56,7 +56,7 @@ class TestLASParser(unittest.TestCase):
         self.assertEqual(parser.NULL, '-999.25000')
 
     def test_parseLAS_CurveBlock(self):
-        """Test Curve Block Section Curve Parameters"""
+        '''Test Curve Block Section Curve Parameters'''
         parser = LASParser()
         parser.current_section = 'CURVE'
         parser.line_type = 'PARAMETER'
@@ -66,22 +66,22 @@ class TestLASParser(unittest.TestCase):
         self.assertEqual(parser.curves, ['RHOB'])
 
     def test_getSection_AsciiSectionReturned(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         self.assertEqual(LASParser.getSection("A"), "ASCII")
 
     def test_parseParameterLine_Curves(self):
-        """Test Curve Block Section Permutations"""
+        '''Test Curve Block Section Permutations'''
         self.assertEqual(LASParser.parseParameterLine(
             "RHOB.G/C3                 :   Bulk Density"),
             ('RHOB', 'G/C3', '', 'Bulk Density', ''))
 
     def test_parseParameterLine_AsciiSectionReturned(self):
-        """Test Ascii Block Section Permutations"""
+        '''Test Ascii Block Section Permutations'''
         pass
 
     # ending the test
     def tearDown(self):
-        """Cleaning up after the test"""
+        '''Cleaning up after the test'''
         pass
 
 

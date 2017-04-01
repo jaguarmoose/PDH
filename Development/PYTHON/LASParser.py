@@ -1,4 +1,4 @@
-"""Old LAS Parser"""
+'''Old LAS Parser'''
 
 import re
 import os
@@ -6,7 +6,7 @@ from collections import deque
 
 
 def getSection(match):
-    """get section name from first Upper character"""
+    '''get section name from first Upper character'''
     return {
         'A': 'ascii',
         'C': 'curve',
@@ -21,7 +21,7 @@ __ParameterRule__ = re.compile(r'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
 
 
 def parseLAS(lines):
-    """Pass in raw las file lines"""
+    '''Pass in raw las file lines'''
     sep = None
     version = None
     wrap = None

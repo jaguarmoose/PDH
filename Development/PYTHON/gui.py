@@ -1,4 +1,4 @@
-"""QT 5 GUI"""
+'''QT 5 GUI'''
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 

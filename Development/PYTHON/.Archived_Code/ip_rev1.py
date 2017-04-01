@@ -21,11 +21,11 @@ import pdh_files
 #though node GP may handle
 
 prgnm= "Archie"
-pathd= "C:/PDH/DATA"        # adnod needs work
+path_data= "C:/PDH/DATA"        # adnod needs work
 paths="C:/PDH/System"      # adnod should do this
 pnode = "3:1:1"             #executable program file is under system node 3:1 spec file is s.1 (orlabeled SPEC)
 sppath=paths + r"/L1K1/L2K1/s.1" # This really should be found by program name
-pathu="C:/PDH/USER"        # All this sets up User paths needs subroutine
+path_user="C:/PDH/USER"        # All this sets up User paths needs subroutine
 usernum="4"                 # User Number from frend four how many do you want
 usernode = "2:1:" + usernum
 userpath = adnod.uns2path(usernode)

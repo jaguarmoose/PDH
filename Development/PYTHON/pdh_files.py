@@ -522,7 +522,7 @@ if __name__ == '__main__':
 def unm2uns(username):    # convert user name to user number
     import os
     import ast
-    urrpath = r'C:\PDH\USER\L1K1\L2K'
+    urrpath = os.path.abspath(os.path.join(os.path.dirname(__file__),'../../','USER','L1K1','L2K'))
     uns = ''
     i = 4
     urpath = urrpath + str(i) + r'\s.0'

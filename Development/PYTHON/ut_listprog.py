@@ -1,4 +1,4 @@
-""" list programs program entry """
+''' list programs program entry '''
 import os
 import ast
 prrpath = r'C:\PDH\System\L1K1\L2K'

@@ -1,7 +1,8 @@
-"""Input Processor Module"""
+'''Input Processor Module'''
 
 import adnod
 import pdh_files
+import os
 
 # 3a MODE is Interactive or Friendly,build
 #    Displays input/options/output and allows user to select desired values ( friendly only parms not-defined)
@@ -30,8 +31,9 @@ while sppath == ' ':
     prgnm = input('Enter Program Name')
     sppath = pdh_files.prnm2spath(prgnm)
 print(sppath)
-pathd = "C:/PDH/DATA"        # adnod needs work
-pathu = "C:/PDH/USER"        # All this sets up User paths needs subroutine
+path_pdh = os.path.abspath(__file__ + u'../../') 
+path_data = os.path.join(path_pdh,'DATA') # adnod needs work
+path_user = os.path.join(path_pdh,'USER')        # All this sets up User paths needs subroutine
 userpath = adnod.uns2path(usernode)
 urfdepths = ['']
 
