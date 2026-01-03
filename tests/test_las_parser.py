@@ -91,7 +91,7 @@ if __name__ == '__main__':
     import os
     sys.path.append(
         os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)
+            os.path.join(os.path.dirname(__file__), os.path.pardir, "src")
         )
     )
     from pdh.library.las_parser import LASParser, LASParseError
