@@ -1,6 +1,0 @@
-[MESSAGES CONTROL]
-disable=W0312,C0330,C0103,locally-disabled
-
-[FORMAT]
-# Maximum number of characters on a single line.
-max-line-length=160
