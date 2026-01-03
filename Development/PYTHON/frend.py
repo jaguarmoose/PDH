@@ -38,7 +38,18 @@ ugfvals=[]
                                   # : executes a front end command
                                   # $ sets or unsets a Global Parameter
                                   # # moves to a new interactive Menu
+print(
+    "Front End Commands:\n"
+    "  ! execute a program (system tree)\n"
+    "  + execute a user command file\n"
+    "  - execute a global command file (User 0)\n"
+    "  : execute a front end command\n"
+    "  $ set or unset a global parameter\n"
+    "  # move to a new interactive menu\n"
+)
 fec=input("Enter Front End Command")  # this is a lot of what front end does 
 if fec[0] == "!" :           #  then
-    command='python ip_rev1.py'
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_path = os.path.join(script_dir, ".Archived_Code", "ip_rev1.py")
+    command = f'"{sys.executable}" "{script_path}"'
     os.system(command)             # Input processor needs to return 
