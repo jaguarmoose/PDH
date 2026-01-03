@@ -5,7 +5,7 @@ import os
 from collections import deque
 
 
-def getSection(match):
+def get_section(match):
     '''get section name from first Upper character'''
     return {
         'A': 'ascii',
@@ -20,7 +20,7 @@ def getSection(match):
 __ParameterRule__ = re.compile(r'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
 
 
-def parseLAS(lines):
+def parse_las(lines):
     '''Pass in raw las file lines'''
     sep = None
     version = None
@@ -37,7 +37,7 @@ def parseLAS(lines):
         # Check for Section Delimiter Character ~
         if line.strip().startswith('~'):
             try:
-                currentSection = getSection(line.strip()[1:2].upper())
+                currentSection = get_section(line.strip()[1:2].upper())
             except:
                 raise LASParseError(
                     "Unknown Section: {} at Line#: {}".format(line.strip(), i))
@@ -118,7 +118,7 @@ def validate_folder(folder_path=None):
                 filepath = os.path.join(root, filename)
                 with open(filepath, "r") as las_file:
                     try:
-                        deque(parseLAS(las_file))
+                        deque(parse_las(las_file))
                     except LASParseError as e:
                         print(e, filepath)
 

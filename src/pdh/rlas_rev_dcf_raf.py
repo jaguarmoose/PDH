@@ -1,4 +1,4 @@
-from pdh.las_parser import parseLAS, LASParseError
+from pdh.las_parser import parse_las, LASParseError
 import itertools
 import operator
 
@@ -17,7 +17,7 @@ def parse_las_to_node(lasfnm, parent_node="1:1:4"):
     curnode = adnod.nxtkid(parent_node)
     with open(lasfnm, "r") as lashan:
         try:
-            parsedLAS = parseLAS(lashan)
+            parsedLAS = parse_las(lashan)
             curves = []
             cunits = []
             for line in parsedLAS:

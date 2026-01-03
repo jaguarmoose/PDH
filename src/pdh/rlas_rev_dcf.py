@@ -1,4 +1,4 @@
-from pdh.las_parser import parseLAS, LASParseError
+from pdh.las_parser import parse_las, LASParseError
 import sys
 import getopt
 from pdh import adnod
@@ -24,7 +24,7 @@ def parse_las_file(lasfnm):
     """Parse a LAS file and return the curve list."""
     with open(lasfnm, "r") as lashan:
         try:
-            parsedLAS = parseLAS(lashan)
+            parsedLAS = parse_las(lashan)
             curves = []
             for line in parsedLAS:
                 if line[0] == "ascii":

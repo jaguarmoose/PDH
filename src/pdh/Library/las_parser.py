@@ -29,7 +29,7 @@ class LASParser(object):
 		self.VERS = None
 
 	@staticmethod
-	def getSection(match):
+	def get_section(match):
 		'''get section type'''
 		return {
 			'V': 'VERSION',
@@ -45,7 +45,7 @@ class LASParser(object):
 		}.get(match, match)
 
 	@staticmethod
-	def getLineType(match):
+	def get_line_type(match):
 		'''get line type'''
 		return {
 			'VERSION': 'PARAMETER',
@@ -58,31 +58,31 @@ class LASParser(object):
 		}.get(match, "COMMENT")
 
 	@staticmethod
-	def parseParameterLine(line):
+	def parse_parameter_line(line):
 		'''Parses Parameters Line Returning Components
 		Split Parameter Line Format into pieces and strip'''
 		return tuple(val.strip() for val in LASParser.parameter_rule.match(line).groups())
 
 	@staticmethod
-	def parseSectionLine(line):
+	def parse_section_line(line):
 		'''Parses Section Line Returning Section'''
 		match = LASParser.section_rule.match(line)
 		return match.group(1).upper() if match else None
 
-	def parseLAS(self, lines):
+	def parse_las(self, lines):
 		'''Pass in raw las file lines'''
 		for self.line_num, line in enumerate(lines, self.line_num):
 			# Check for Section Delimiter Character ~
 			if line.strip() == '':
 				pass
 			elif line.strip().startswith('~'):
-				section_match = LASParser.parseSectionLine(line.strip().lower())
-				self.current_section = LASParser.getSection(section_match)
-				self.line_type = LASParser.getLineType(self.current_section)
+				section_match = LASParser.parse_section_line(line.strip().lower())
+				self.current_section = LASParser.get_section(section_match)
+				self.line_type = LASParser.get_line_type(self.current_section)
 			elif self.line_type == 'ASCII':
-				self.parseASCII(lines)
+				self.parse_ascii(lines)
 			elif line.strip().startswith('#'):
-				yield ('COMMENT', self.parseCOMMENT(line))
+				yield ('COMMENT', self.parse_comment(line))
 			else:
 				parse_function = getattr(self, 'parse'+self.line_type)
 				if parse_function:
@@ -91,14 +91,14 @@ class LASParser(object):
 					raise LASParseError(
 						"Unknown Section: {} Line: {} at Line#: {}".format(self.current_section, line.strip(), self.line_num))
 
-	def parseCOMMENT(self, line):
+	def parse_comment(self, line):
 		'''Parse the line_type Comment'''
 		return line
 
-	def parsePARAMETER(self, line):
+	def parse_parameter(self, line):
 		'''Parse the line_type Parameter'''
 		try:
-			parameter, unit, value, description, group = LASParser.parseParameterLine(line)
+			parameter, unit, value, description, group = LASParser.parse_parameter_line(line)
 			if self.VERS is not None and self.VERS < 2:
 				value, description = description, value
 		except:
@@ -115,14 +115,14 @@ class LASParser(object):
 					self.__dict__[parameter] = value
 		return (parameter, unit, value, description, group)
 
-	def parameterVERS(self, value):
+	def parameter_vers(self, value):
 		'''Set Version Value'''
 		try:
 			self.VERS = float(value)
 		except ValueError:
 			self.VERS = value
 
-	def parseASCII(self, lines):
+	def parse_ascii(self, lines):
 		'''handle ascii block'''
 		first_line = True
 		line = ""
@@ -157,7 +157,7 @@ class LASParseError(Exception):
 def exception_processor(las_file, parser):
 	'''Continue processing LAS after exception'''
 	try:
-		deque(parser.parseLAS(las_file))
+		deque(parser.parse_las(las_file))
 	except LASParseError as ex:
 		print(ex, las_file.name)
 		print(traceback.format_exc())

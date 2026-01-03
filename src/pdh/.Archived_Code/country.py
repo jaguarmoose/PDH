@@ -30,7 +30,7 @@ statusmsg = StringVar()
 # with the new population.  As well, clear the message about the
 # gift being sent, so it doesn't stick around after we start doing
 # other things.
-def showPopulation(*args):
+def show_population(*args):
     idxs = lbox.curselection()
     if len(idxs)==1:
         idx = int(idxs[0])
@@ -46,7 +46,7 @@ def showPopulation(*args):
 #
 # Figure out which country is selected, which gift is selected with the 
 # radiobuttons, "send the gift", and provide feedback that it was sent.
-def sendGift(*args):
+def send_gift(*args):
     idxs = lbox.curselection()
     if len(idxs)==1:
         idx = int(idxs[0])
@@ -69,7 +69,7 @@ lbl = ttk.Label(c, text="Send to country's leader:")
 g1 = ttk.Radiobutton(c, text=gifts['card'], variable=gift, value='card')
 g2 = ttk.Radiobutton(c, text=gifts['flowers'], variable=gift, value='flowers')
 g3 = ttk.Radiobutton(c, text=gifts['nastygram'], variable=gift, value='nastygram')
-send = ttk.Button(c, text='Send Gift', command=sendGift, default='active')
+send = ttk.Button(c, text='Send Gift', command=send_gift, default='active')
 sentlbl = ttk.Label(c, textvariable=sentmsg, anchor='center')
 status = ttk.Label(c, textvariable=statusmsg, anchor=W)
 
@@ -87,9 +87,9 @@ c.grid_rowconfigure(5, weight=1)
 
 # Set event bindings for when the selection in the listbox changes,
 # when the user double clicks the list, and when they hit the Return key
-lbox.bind('<<ListboxSelect>>', showPopulation)
-lbox.bind('<Double-1>', sendGift)
-root.bind('<Return>', sendGift)
+lbox.bind('<<ListboxSelect>>', show_population)
+lbox.bind('<Double-1>', send_gift)
+root.bind('<Return>', send_gift)
 
 # Colorize alternating lines of the listbox
 for i in range(0,len(countrynames),2):
@@ -98,11 +98,11 @@ for i in range(0,len(countrynames),2):
 # Set the starting state of the interface, including selecting the
 # default gift to send, and clearing the messages.  Select the first
 # country in the list; because the <<ListboxSelect>> event is only
-# generated when the user makes a change, we explicitly call showPopulation.
+# generated when the user makes a change, we explicitly call show_population.
 gift.set('card')
 sentmsg.set('')
 statusmsg.set('')
 lbox.selection_set(0)
-showPopulation()
+show_population()
 
 root.mainloop()
