@@ -1,6 +1,7 @@
 import argparse
 
 from pdh import frend
+from pdh import frend_gui
 
 
 def main():
@@ -16,7 +17,7 @@ def main():
         frend.run_cli()
     else:
         try:
-            frend.run_gui()
+            frend_gui.run_gui()
         except Exception:
             frend.run_cli()
 

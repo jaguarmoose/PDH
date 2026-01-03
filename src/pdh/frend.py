@@ -31,18 +31,9 @@ def run_cli():
         subprocess.run([sys.executable, script_path], check=True, env=env)
 
 
-def run_gui():
-    """Run the GUI front end."""
-    from pdh.frend_gui import run_gui as _run_gui
-    _run_gui()
-
-
 def main():
-    """Run the default front end, falling back to CLI on errors."""
-    try:
-        run_gui()
-    except Exception:
-        run_cli()
+    """Run the CLI front end."""
+    run_cli()
 
 
 if __name__ == "__main__":

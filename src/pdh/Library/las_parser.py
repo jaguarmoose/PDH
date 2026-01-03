@@ -1,5 +1,8 @@
 '''LAS Parser Class and Exceptions'''
+import os
 import re
+import traceback
+from collections import deque
 
 class LASParser(object):
 	'''LAS Parser returns parsed lines'''
@@ -153,8 +156,6 @@ class LASParseError(Exception):
 
 def exception_processor(las_file, parser):
 	'''Continue processing LAS after exception'''
-	import traceback
-	from collections import deque
 	try:
 		deque(parser.parseLAS(las_file))
 	except LASParseError as ex:
@@ -166,7 +167,6 @@ def exception_processor(las_file, parser):
 
 def validate_folder(folder_path=None):
 	'''Validate LAS files in a folder using the class-based parser.'''
-	import os
 	if folder_path is None:
 		folder_path = os.path.realpath(os.path.join("Development", "LAS", "LAS Files"))
 
