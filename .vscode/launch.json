@@ -81,7 +81,10 @@
             "request": "launch",
             "module": "pdh",
             "cwd": "${workspaceRoot}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}\\src"
+            }
         },
         {
             "name": "Integrated Terminal/Console",
