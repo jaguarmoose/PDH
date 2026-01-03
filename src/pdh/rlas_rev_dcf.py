@@ -1,4 +1,4 @@
-from pdh.LASParser import parseLAS, LASParseError
+from pdh.las_parser import parseLAS, LASParseError
 import sys
 import getopt
 from pdh import adnod

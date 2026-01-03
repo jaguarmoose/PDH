@@ -94,8 +94,8 @@ if __name__ == '__main__':
             os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)
         )
     )
-    from pdh.Library.LASParser import LASParser, LASParseError
+    from pdh.library.las_parser import LASParser, LASParseError
     unittest.main()
     pass
 else:
-    from pdh.Library.LASParser import LASParser, LASParseError
+    from pdh.library.las_parser import LASParser, LASParseError
