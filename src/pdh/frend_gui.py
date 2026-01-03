@@ -28,7 +28,8 @@ COMMAND_HELP = [
 
 
 class FrendWindow(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
+        """__init__."""
         super().__init__()
         self.setWindowTitle("PDH Front End")
         self.resize(640, 420)
@@ -57,7 +58,8 @@ class FrendWindow(QWidget):
 
         self.setLayout(layout)
 
-    def handle_run(self):
+    def handle_run(self) -> None:
+        """handle_run."""
         fec = self.command_input.text().strip()
         if not fec:
             QMessageBox.information(self, "PDH Front End", "Enter a command.")
@@ -69,7 +71,8 @@ class FrendWindow(QWidget):
             self.output.append(f"Command received: {fec}")
             self.output.append("No handler implemented for this command yet.")
 
-    def run_input_processor(self):
+    def run_input_processor(self) -> None:
+        """run_input_processor."""
         package_dir = os.path.dirname(os.path.abspath(__file__))
         script_path = os.path.join(package_dir, ".Archived_Code", "ip_rev1.py")
         if not os.path.exists(script_path):
@@ -103,14 +106,15 @@ class FrendWindow(QWidget):
                 self.output.append(exc.stderr.strip())
 
 
-def run_gui():
+def run_gui() -> None:
+    """run_gui."""
     app = QApplication(sys.argv)
     window = FrendWindow()
     window.show()
     sys.exit(app.exec_())
 
 
-def main():
+def main() -> None:
     """Launch the PDH front-end GUI."""
     run_gui()
 

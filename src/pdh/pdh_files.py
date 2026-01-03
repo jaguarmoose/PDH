@@ -6,7 +6,8 @@ from pdh import adnod
 
 # Create an info file given a NodeString
 # Need to error check for directory and file then return
-def crinf(ns,label,iname,units,si,npts,di): # Nodestring and Node Label
+def crinf(ns: str, label: str, iname: str, units: str, si: str, npts: str, di: str) -> None:
+    """crinf."""
     path = adnod.ns2path(ns)
     path= path + "\s.0"
     fso=open(path,"w")
@@ -17,7 +18,8 @@ def crinf(ns,label,iname,units,si,npts,di): # Nodestring and Node Label
     s=str(recdi)
     fso.write(s+ "\n")
     fso.close()
-def rdinf(ns): #,nodename,nindex,nstart,nnpts,ndi,nunits): # returns a list
+def rdinf(ns: str) -> list[str]:
+    """rdinf."""
     nlist=[]
     path = adnod.ns2path(ns)
     path= path + "\s.0"
@@ -37,7 +39,8 @@ def rdinf(ns): #,nodename,nindex,nstart,nnpts,ndi,nunits): # returns a list
     fso.close()
     return nlist
 
-def crdi(path,label,npts,start,units):
+def crdi(path: str, label: str, npts: str, start: str, units: str) -> None:
+    """crdi."""
     fo=open(path,"a")
     for line in fo.readlines():
          line=line.strip('\n')
@@ -45,7 +48,8 @@ def crdi(path,label,npts,start,units):
                       # if rectype = DI update those values
          oline=line + "\n"
          fo.write(oline)
-def rdzone (curnode,zname): # Looks for Zone-zname in INF returns ztop zbase or ' '
+def rdzone(curnode: str, zname: str) -> tuple[str, str]:
+    """rdzone."""
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -62,7 +66,8 @@ def rdzone (curnode,zname): # Looks for Zone-zname in INF returns ztop zbase or 
                 return ztop,zbase
     infhan.close()
     return ztop,zbase
-def wrzone(curnode,zonenm,ztop,zbase):
+def wrzone(curnode: str, zonenm: str, ztop: str, zbase: str) -> None:
+    """wrzone."""
     dum1,dum2= rdzone(curnode,zonenm)
     if dum1 ==' ':
         curpath=adnod.ns2path(curnode)    # gp to value
@@ -74,7 +79,8 @@ def wrzone(curnode,zonenm,ztop,zbase):
         infhan.close()
         return
     return
-def wrzp(curnode,zonenm,zpname,zpvalue,zpunits=' '):
+def wrzp(curnode: str, zonenm: str, zpname: str, zpvalue: str, zpunits: str = ' ') -> None:
+    """wrzp."""
     curpath=adnod.ns2path(curnode)    # gp to value
     path=curpath+"/s.0"
     infile=path                 # if record not found append to file
@@ -108,7 +114,8 @@ def wrzp(curnode,zonenm,zpname,zpvalue,zpunits=' '):
     return
 
 
-def rdzp(curnode,zonenm,zpname):
+def rdzp(curnode: str, zonenm: str, zpname: str) -> str:
+    """rdzp."""
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -123,7 +130,8 @@ def rdzp(curnode,zonenm,zpname):
                 return zvalue;
     infhan.close()
     return zvalue;
-def nxtsf(ns):
+def nxtsf(ns: str) -> tuple[str, int]:
+    """nxtsf."""
     n=1
     if ns[0] == '2':
         ipath=adnod.uns2path(ns)
@@ -134,7 +142,8 @@ def nxtsf(ns):
         n=n+1
         path=ipath+"\s."+str(n)
     return path,n
-def crvf(ns, name, units,npts, nval=-999.99):
+def crvf(ns: str, name: str, units: str, npts: str, nval: float = -999.99) -> str:
+    """crvf."""
      #Create a Vector File, updated: include npts in call nval in call default
     path = adnod.ns2path(ns) # open the inf file to read
                              # This should be read from DI record on INF
@@ -168,7 +177,8 @@ def crvf(ns, name, units,npts, nval=-999.99):
         index=index+1
     fvf.close()              # write the new VF record to inf
     return n;
-def nxtvf(ns):
+def nxtvf(ns: str) -> tuple[str, int]:
+    """nxtvf."""
     n=1
     rpath = adnod.ns2path(ns)
     path=rpath+r"\v."+str(n)
@@ -177,7 +187,8 @@ def nxtvf(ns):
         path=rpath+r"\v."+str(n)
     return path,str(n)
 
-def upsf(path): # open file path look record begin with rlab
+def upsf(path: str) -> None:
+    """upsf."""
     infile=path                 # if record not found append to file
     outfile=path+"tmp"
     fi=open(infile, 'r') # open file for reading
@@ -197,7 +208,8 @@ def upsf(path): # open file path look record begin with rlab
     fo.close()
     os.remove(infile)
     os.rename(outfile,infile)
-def rdgp(curnode,gpname):
+def rdgp(curnode: str, gpname: str) -> str:
+    """rdgp."""
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -213,7 +225,8 @@ def rdgp(curnode,gpname):
     gpval=' '
     return gpval
 
-def wrgp(path,name,value,units):  # write a GP or update a GP in an INF file
+def wrgp(path: str, name: str, value: str, units: str) -> None:
+    """wrgp."""
     infile=path                 # if record not found append to file
     outfile=path+"tmp"
     fi=open(infile, 'r') # open file for reading
@@ -242,11 +255,13 @@ def wrgp(path,name,value,units):  # write a GP or update a GP in an INF file
     os.rename(outfile,infile)
     return
 
-def wrrecvf(path,n,name,units):
+def wrrecvf(path: str, n: str, name: str, units: str) -> None:
+    """wrrecvf."""
     finf=open(path+"s.0","a")
     recvf={'Rtype':'VF','Name': name,'FileNum': n,'Units':units}
     return
-def wrrecsf(path,n,name,kind=''):
+def wrrecsf(path: str, n: str, name: str, kind: str = '') -> None:
+    """wrrecsf."""
     finf=open(path+"\s.0","a")
     recsf=str({'Rtype':'SF','Name': name,'FileNum': n,'Kind':kind})
     oline=recsf + "\n"
@@ -256,7 +271,8 @@ def wrrecsf(path,n,name,kind=''):
     fsf.write(str({'Rtype':'HD','Name': name})+'\n')
     fsf.close()
     return
-def upvf(vpath,sinx,ninx,minx,vdata):     # This will write to a vector file
+def upvf(vpath: str, sinx: str, ninx: str, minx: str, vdata: list[str]) -> None:
+    """upvf."""
     print(vpath)
     fv=open(vpath,'r')
     ftmp=open(vpath + r"_tmp",'w')
@@ -279,7 +295,8 @@ def upvf(vpath,sinx,ninx,minx,vdata):     # This will write to a vector file
     os.rename(vpath +r"_tmp",vpath)
 
 
-def rdrf(rfpath, rfhead, rfuivals,rfivals,rfuovals, rfovals, rfdepth):
+def rdrf(rfpath: str, rfhead: list[str], rfuivals: list[str], rfivals: list[str], rfuovals: list[str], rfovals: list[str], rfdepth: list[str]) -> None:
+    """rdrf."""
 
     rfhan=open(rfpath,'r') # This is where the function to read a runfile goes
     for line in rfhan.readlines(): # There are 4 types of records HD ,IN,OUT,DEPTH
@@ -303,7 +320,8 @@ def rdrf(rfpath, rfhead, rfuivals,rfivals,rfuovals, rfovals, rfdepth):
                 rfdepth.append(d['MXPTS'])
     rfhan.close()
     return
-def rdspecf(sppath,sphead,sptypr,splabs,spdef,spunits,sphelp,sprng):
+def rdspecf(sppath: str, sphead: list[str], sptypr: list[str], splabs: list[str], spdef: list[str], spunits: list[str], sphelp: list[str], sprng: list[str]) -> None:
+    """rdspecf."""
     sphan=open(sppath,'r') # Open Program Spec file
     for line in sphan.readlines():
         line=line.strip("\n")
@@ -322,7 +340,8 @@ def rdspecf(sppath,sphead,sptypr,splabs,spdef,spunits,sphelp,sprng):
                 sprng.append(d['range'])
     sphan.close()
     return
-def rdusrrf(urfpath,urfuvals,dt):
+def rdusrrf(urfpath: str, urfuvals: list[str], dt: list[str]) -> None:
+    """rdusrrf."""
     urfhan=open(urfpath,'r') # Open User Run File
     for line in urfhan.readlines():
         line=line.strip("\n")
@@ -336,7 +355,8 @@ def rdusrrf(urfpath,urfuvals,dt):
             #    urfdepths.append(d['End'])
     urfhan.close()
     return
-def wrrf(rfpath,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts):
+def wrrf(rfpath: str, prgnm: str, nin: str, nout: str, rfuvals: list[str], rfvals: list[str], sindex: str, npts: str, mxpts: str) -> None:
+    """wrrf."""
     rfhan=open(rfpath,'w')
     recrfhd={'Ftype': 'Run', 'Rtype': 'HD','Prgnm':prgnm,'NIN':nin,'NOUT':nout}
     s=str(recrfhd)
@@ -357,7 +377,8 @@ def wrrf(rfpath,prgnm,nin,nout,rfuvals,rfvals,sindex,npts,mxpts):
     rfhan.write(s + '\n')
     rfhan.close()
     return
-def wrurf(rfpath,prgnm,nin,nout,rfuvals,dt):
+def wrurf(rfpath: str, prgnm: str, nin: str, nout: str, rfuvals: list[str], dt: list[str]) -> None:
+    """wrurf."""
     # biggest way this differs from runfile is depth is in DI units and curves GPs are named
     rfhan=open(rfpath,'w')
     recrfhd={'Ftype': 'Run', 'Rtype': 'HD','Prgnm':prgnm,'NIN':nin,'NOUT':nout}
@@ -379,7 +400,8 @@ def wrurf(rfpath,prgnm,nin,nout,rfuvals,dt):
     rfhan.write(s + '\n')
     rfhan.close()
     
-def fnm2num(curnode,rtype,fname,kind=''):
+def fnm2num(curnode: str, rtype: str, fname: str, kind: str = '') -> str:
+    """fnm2num."""
                 # open s.0 for curnode
                 # read records looking for match to file type and name
                 # if present return num else
@@ -410,7 +432,8 @@ def fnm2num(curnode,rtype,fname,kind=''):
 
 
 # write user global file
-def wruglobf(usernode, glfnam, glnams, glvals):
+def wruglobf(usernode: str, glfnam: str, glnams: list[str], glvals: list[str]) -> None:
+    """wruglobf."""
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
     if sfn == ' ':
@@ -429,7 +452,8 @@ def wruglobf(usernode, glfnam, glnams, glvals):
     return
 
 
-def rduglobf(usernode, glfnam, glnams, glvals):
+def rduglobf(usernode: str, glfnam: str, glnams: list[str], glvals: list[str]) -> None:
+    """rduglobf."""
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
     if sfn == ' ':
@@ -450,7 +474,8 @@ def rduglobf(usernode, glfnam, glnams, glvals):
     return
 
 
-def rdnodesf(usernode, nodesfnam, nodes, nodenames):
+def rdnodesf(usernode: str, nodesfnam: str, nodes: list[str], nodenames: list[str]) -> None:
+    """rdnodesf."""
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
     if sfn == ' ':
@@ -470,7 +495,8 @@ def rdnodesf(usernode, nodesfnam, nodes, nodenames):
 # write user nodes file
 
 
-def wrnodesf(usernode, nodesfnam, nodes, nodenames):
+def wrnodesf(usernode: str, nodesfnam: str, nodes: list[str], nodenames: list[str]) -> None:
+    """wrnodesf."""
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
     if sfn == ' ':
@@ -488,7 +514,7 @@ def wrnodesf(usernode, nodesfnam, nodes, nodenames):
     nodeshan.close()
     return
 
-def main():
+def main() -> None:
     """Entry point for manual testing of pdh_files helpers."""
     print("pdh_files module loaded")
 
@@ -496,7 +522,8 @@ def main():
 if __name__ == '__main__':
     main()
 
-def unm2uns(username):    # convert user name to user number
+def unm2uns(username: str) -> str:
+    """unm2uns."""
     urrpath = os.path.abspath(os.path.join(os.path.dirname(__file__),'../../','USER','L1K1','L2K'))
     uns = ''
     i = 4
@@ -514,7 +541,8 @@ def unm2uns(username):    # convert user name to user number
         i = i+1
         urpath = urrpath + str(i) + r'\s.0'
     return uns
-def prnm2spath(progname): #program name to program number
+def prnm2spath(progname: str) -> str:
+    """prnm2spath."""
     prrpath = r'C:\PDH\System\L1K1\L2K'
     progspath=" "
     i = 1

@@ -1,7 +1,7 @@
 from pdh import adnod
 
 
-def build_nodes(max_i=5, max_j=4, max_k=29, root="1"):
+def build_nodes(max_i: int = 5, max_j: int = 4, max_k: int = 29, root: str = "1") -> None:
     """Create a tree of nodes under the given root string."""
     i = 0
     while i < max_i:
@@ -23,7 +23,7 @@ def build_nodes(max_i=5, max_j=4, max_k=29, root="1"):
                 adnod.adnod(ns)
 
 
-def main():
+def main() -> None:
     """Run the node creation with default parameters."""
     build_nodes()
 

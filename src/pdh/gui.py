@@ -3,7 +3,11 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 
 
-def build_window(title="PDH", size=(250, 150), position=(300, 300)):
+def build_window(
+    title: str = "PDH",
+    size: tuple[int, int] = (250, 150),
+    position: tuple[int, int] = (300, 300),
+) -> QWidget:
     """Create and return the main PDH widget."""
     w = QWidget()
     w.resize(*size)
@@ -12,7 +16,7 @@ def build_window(title="PDH", size=(250, 150), position=(300, 300)):
     return w
 
 
-def main():
+def main() -> None:
     """Launch the basic PDH Qt window."""
     app = QApplication(sys.argv)
     w = build_window()

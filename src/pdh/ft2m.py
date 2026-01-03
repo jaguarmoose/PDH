@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 
-def build_ui(root):
+def build_ui(root: Tk) -> tuple[StringVar, StringVar]:
     """Create the feet-to-meters UI and return (feet_var, meters_var)."""
     mainframe = ttk.Frame(root, padding="3 3 12 12")
     mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -32,7 +32,7 @@ def build_ui(root):
     return feet, meters
 
 
-def calculate(feet_var, meters_var):
+def calculate(feet_var: StringVar, meters_var: StringVar) -> None:
     """Calculate meters from feet input."""
     try:
         value = float(feet_var.get())
@@ -41,7 +41,7 @@ def calculate(feet_var, meters_var):
         pass
 
 
-def main():
+def main() -> None:
     """Launch the feet-to-meters GUI."""
     root = Tk()
     root.title("Feet to Meters")

@@ -1,9 +1,10 @@
 """List program entries from the System tree."""
 import os
 import ast
+from typing import Iterator
 
 
-def iter_programs(system_root):
+def iter_programs(system_root: str) -> Iterator[tuple[int, str, str]]:
     """Yield (index, name, desc) entries from the program records."""
     i = 1
     prpath = os.path.join(system_root + str(i), "s.0")
@@ -16,7 +17,7 @@ def iter_programs(system_root):
         prpath = os.path.join(system_root + str(i), "s.0")
 
 
-def main():
+def main() -> None:
     """Print program entries using a default root."""
     system_root = os.sep + os.path.join("Users", "robertfarnan", "PDH", "System", "L1K1", "L2K")
     for idx, progname, desc in iter_programs(system_root):

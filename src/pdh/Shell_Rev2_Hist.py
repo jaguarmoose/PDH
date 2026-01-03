@@ -10,7 +10,7 @@ from pdh import pdh_files
 import os
 import matplotlib.pyplot as plt
 
-def run(username="Robert Farnan", prgnm="Hist"):
+def run(username: str = "Robert Farnan", prgnm: str = "Hist") -> None:
     """Run the histogram shell with default configuration."""
     usernode = pdh_files.unm2uns(username)
     sppath = pdh_files.prnm2spath(prgnm)
@@ -167,7 +167,7 @@ def run(username="Robert Farnan", prgnm="Hist"):
     # also need to handle case where constant is spec'd for output -
 
 
-def main():
+def main() -> None:
     """Run the shell using default parameters."""
     run()
 

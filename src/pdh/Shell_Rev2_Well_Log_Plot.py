@@ -10,7 +10,7 @@ from pdh import pdh_files
 import os
 import matplotlib.pyplot as plt
 
-def run(curnode="1:1:4:18", prgnm="WLPlot", rfnamin="RAFOUT"):
+def run(curnode: str = "1:1:4:18", prgnm: str = "WLPlot", rfnamin: str = "RAFOUT") -> None:
     """Run the well log plot shell with default configuration."""
     # current test data node (curnode) should be passed from IP
     # curnode = input("Enter Curnode")
@@ -183,7 +183,7 @@ def run(curnode="1:1:4:18", prgnm="WLPlot", rfnamin="RAFOUT"):
     # also need to handle case where constant is spec'd for output -
 
 
-def main():
+def main() -> None:
     """Run the shell using default parameters."""
     run()
 

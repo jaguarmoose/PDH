@@ -1,6 +1,6 @@
 import os
 
-def adnod(ns):
+def adnod(ns: str) -> None:
     """Add a child node directory and create its s.0 file."""
     path = ns2path(ns)
     os.mkdir(path)  # need to do a whole bunch of error checking
@@ -8,7 +8,7 @@ def adnod(ns):
     with open(path, "w"):
         pass
 
-def nxtkid(pns):
+def nxtkid(pns: str) -> str:
     """Return the next available child node and create its directory."""
     i=1
     kns=pns+":"+str(i)
@@ -20,7 +20,7 @@ def nxtkid(pns):
     os.mkdir(path)
     return kns
 
-def ns2path(ns):
+def ns2path(ns: str) -> str:
     """Convert a node string to a data directory path."""
     path = r'C:\PDH\DATA'
     nanc= ns.split(":")
@@ -30,7 +30,7 @@ def ns2path(ns):
     print(path)
     return path
 
-def uns2path(uns):
+def uns2path(uns: str) -> str:
     """Convert a user node string to a user directory path."""
     urpath = r'C:\PDH\USER'
     nanc= uns.split(":")
@@ -41,7 +41,7 @@ def uns2path(uns):
     return urpath
 
 
-def main():
+def main() -> None:
     """Run a simple node conversion example."""
     ns2path("1:1")
 

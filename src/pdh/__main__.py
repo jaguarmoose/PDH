@@ -4,7 +4,8 @@ from pdh import frend
 from pdh import frend_gui
 
 
-def main():
+def main() -> None:
+    """Run the PDH front end."""
     parser = argparse.ArgumentParser(description="PDH front end")
     parser.add_argument(
         "--cli",

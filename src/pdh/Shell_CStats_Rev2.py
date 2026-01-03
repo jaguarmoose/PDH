@@ -17,7 +17,7 @@ from pdh import adnod
 from pdh import pdh_files
 import os
 
-def run(username="Robert Farnan", prgnm="CStats"):
+def run(username: str = "Robert Farnan", prgnm: str = "CStats") -> None:
     """Run the CStats shell with default configuration."""
     usernode = pdh_files.unm2uns(username)
     sppath = pdh_files.prnm2spath(prgnm)
@@ -184,7 +184,7 @@ def run(username="Robert Farnan", prgnm="CStats"):
     print( str( mean_civ) + str(good_discrim_values))
 
 
-def main():
+def main() -> None:
     """Run the shell using default parameters."""
     run()
 

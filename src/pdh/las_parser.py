@@ -1,11 +1,12 @@
 '''Old LAS Parser'''
 
-import re
 import os
+import re
 from collections import deque
+from typing import Iterable, Iterator
 
 
-def get_section(match):
+def get_section(match: str) -> str:
     '''get section name from first Upper character'''
     return {
         'A': 'ascii',
@@ -20,7 +21,7 @@ def get_section(match):
 __ParameterRule__ = re.compile(r'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n]*)')
 
 
-def parse_las(lines):
+def parse_las(lines: Iterable[str]) -> Iterator[tuple[str, object]]:
     '''Pass in raw las file lines'''
     sep = None
     version = None
@@ -107,7 +108,7 @@ class LASParseError(Exception):
     pass
 
 
-def validate_folder(folder_path=None):
+def validate_folder(folder_path: str | None = None) -> None:
     """Parse all LAS files under a folder and print any errors."""
     if folder_path is None:
         folder_path = os.path.realpath(os.path.join("Development", "LAS", "LAS Files"))
@@ -123,7 +124,7 @@ def validate_folder(folder_path=None):
                         print(e, filepath)
 
 
-def main():
+def main() -> None:
     """Validate LAS files using default folder location."""
     validate_folder()
 

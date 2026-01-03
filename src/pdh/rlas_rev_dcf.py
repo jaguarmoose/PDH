@@ -20,7 +20,7 @@ import operator
 #   output properties to properties
 #   output curves to curves
 
-def parse_las_file(lasfnm):
+def parse_las_file(lasfnm: str) -> list[str]:
     """Parse a LAS file and return the curve list."""
     with open(lasfnm, "r") as lashan:
         try:
@@ -41,7 +41,7 @@ def parse_las_file(lasfnm):
             return []
 
 
-def main(lasfnm=None, curnode="1:1:4:1"):
+def main(lasfnm: str | None = None, curnode: str = "1:1:4:1") -> None:
     """Run the LAS parser with a default file when executed directly."""
     if lasfnm is None:
         lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"

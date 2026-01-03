@@ -1,18 +1,19 @@
 from pdh.las_parser import parse_las, LASParseError
 import itertools
 import operator
+from typing import Iterator
 
 from pdh import adnod
 from pdh import pdh_files
 
 
-def iter_example():
+def iter_example() -> Iterator[int]:
     """Yield a few example integers for quick sanity checks."""
     for i in range(10):
         yield i
 
 
-def parse_las_to_node(lasfnm, parent_node="1:1:4"):
+def parse_las_to_node(lasfnm: str, parent_node: str = "1:1:4") -> str | None:
     """Parse a LAS file and write curves into a new child node."""
     curnode = adnod.nxtkid(parent_node)
     with open(lasfnm, "r") as lashan:
@@ -71,7 +72,7 @@ def parse_las_to_node(lasfnm, parent_node="1:1:4"):
     return curnode
 
 
-def main(lasfnm=None, parent_node="1:1:4"):
+def main(lasfnm: str | None = None, parent_node: str = "1:1:4") -> None:
     """Run the LAS parser-to-node workflow with defaults."""
     if lasfnm is None:
         lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"

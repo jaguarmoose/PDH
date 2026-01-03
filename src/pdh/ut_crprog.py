@@ -3,7 +3,7 @@ import os
 import ast
 
 
-def create_program_entry(progname, desc, system_root=r"C:\PDH\System\L1K1\L2K"):
+def create_program_entry(progname: str, desc: str, system_root: str = r"C:\PDH\System\L1K1\L2K") -> int:
     """Create a program record and return the program index used."""
     i = 1
     prpath = system_root + str(i) + r"\s.0"
@@ -23,7 +23,7 @@ def create_program_entry(progname, desc, system_root=r"C:\PDH\System\L1K1\L2K"):
     return i
 
 
-def main():
+def main() -> None:
     """Prompt for inputs and create a program entry."""
     progname = input("Enter New Program Name: 8 chars or less")
     desc = input("Enter Short Description for Program")

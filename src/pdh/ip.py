@@ -4,7 +4,7 @@ from pdh import adnod
 from pdh import pdh_files
 import os
 
-def run(username="Robert Farnan"):
+def run(username: str = "Robert Farnan") -> None:
     """Run the input processor with default configuration."""
 
     # 3a MODE is Interactive or Friendly,build
@@ -322,7 +322,7 @@ def run(username="Robert Farnan"):
             print(" Build Mode")
 
 
-def main():
+def main() -> None:
     """Run the input processor using default parameters."""
     run()
 

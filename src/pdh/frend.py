@@ -6,7 +6,7 @@ from pdh import adnod
 from pdh import pdh_files
 
 
-def run_cli():
+def run_cli() -> None:
     """Run the CLI front end."""
     print(
         "Front End Commands:\n"
@@ -31,7 +31,7 @@ def run_cli():
         subprocess.run([sys.executable, script_path], check=True, env=env)
 
 
-def main():
+def main() -> None:
     """Run the CLI front end."""
     run_cli()
 

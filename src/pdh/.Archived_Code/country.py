@@ -30,7 +30,8 @@ statusmsg = StringVar()
 # with the new population.  As well, clear the message about the
 # gift being sent, so it doesn't stick around after we start doing
 # other things.
-def show_population(*args):
+def show_population(*args: object) -> None:
+    """show_population."""
     idxs = lbox.curselection()
     if len(idxs)==1:
         idx = int(idxs[0])
@@ -46,7 +47,8 @@ def show_population(*args):
 #
 # Figure out which country is selected, which gift is selected with the 
 # radiobuttons, "send the gift", and provide feedback that it was sent.
-def send_gift(*args):
+def send_gift(*args: object) -> None:
+    """send_gift."""
     idxs = lbox.curselection()
     if len(idxs)==1:
         idx = int(idxs[0])

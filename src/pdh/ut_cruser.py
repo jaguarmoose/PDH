@@ -6,7 +6,7 @@ from pdh import pdh_files
 from pdh import adnod
 
 
-def create_user(username, user_root=r"C:\PDH\USER\L1K1\L2K"):
+def create_user(username: str, user_root: str = r"C:\PDH\USER\L1K1\L2K") -> int:
     """Create a new user node and return the user index."""
     i = 1
     urpath = user_root + str(i) + r"\s.0"
@@ -26,7 +26,7 @@ def create_user(username, user_root=r"C:\PDH\USER\L1K1\L2K"):
     return i
 
 
-def main():
+def main() -> None:
     """Prompt for a username and create the user record."""
     username = input("Enter User Name")
     try:

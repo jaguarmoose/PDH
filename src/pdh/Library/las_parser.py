@@ -3,16 +3,19 @@ import os
 import re
 import traceback
 from collections import deque
+from typing import Iterable, Iterator
+
 
 class LASParser(object):
 	'''LAS Parser returns parsed lines'''
+
 
 	parameter_rule = re.compile(r'([^\.]*)\.([^\s]*)\s*([^:]*):([^\n\|]*)\|*([^\n]*)')
 	section_rule = re.compile(r'~([^ \[]*)')
 	vers_parameters = set(('wrap', 'vers', 'sep'))
 	well_parameters = set(('strt', 'stop', 'step', 'null'))
 
-	def __init__(self, data=None):
+	def __init__(self, data: dict | None = None) -> None:
 		'''Initialize LASParser'''
 		if data != None:
 			self.__dict__ = data
@@ -29,7 +32,7 @@ class LASParser(object):
 		self.VERS = None
 
 	@staticmethod
-	def get_section(match):
+	def get_section(match: str) -> str:
 		'''get section type'''
 		return {
 			'V': 'VERSION',
@@ -45,7 +48,7 @@ class LASParser(object):
 		}.get(match, match)
 
 	@staticmethod
-	def get_line_type(match):
+	def get_line_type(match: str) -> str:
 		'''get line type'''
 		return {
 			'VERSION': 'PARAMETER',
@@ -58,18 +61,18 @@ class LASParser(object):
 		}.get(match, "COMMENT")
 
 	@staticmethod
-	def parse_parameter_line(line):
+	def parse_parameter_line(line: str) -> tuple[str, str, str, str, str]:
 		'''Parses Parameters Line Returning Components
 		Split Parameter Line Format into pieces and strip'''
 		return tuple(val.strip() for val in LASParser.parameter_rule.match(line).groups())
 
 	@staticmethod
-	def parse_section_line(line):
+	def parse_section_line(line: str) -> str | None:
 		'''Parses Section Line Returning Section'''
 		match = LASParser.section_rule.match(line)
 		return match.group(1).upper() if match else None
 
-	def parse_las(self, lines):
+	def parse_las(self, lines: Iterable[str]) -> Iterator[tuple[str, object]]:
 		'''Pass in raw las file lines'''
 		for self.line_num, line in enumerate(lines, self.line_num):
 			# Check for Section Delimiter Character ~
@@ -91,11 +94,11 @@ class LASParser(object):
 					raise LASParseError(
 						"Unknown Section: {} Line: {} at Line#: {}".format(self.current_section, line.strip(), self.line_num))
 
-	def parse_comment(self, line):
+	def parse_comment(self, line: str) -> str:
 		'''Parse the line_type Comment'''
 		return line
 
-	def parse_parameter(self, line):
+	def parse_parameter(self, line: str) -> tuple[str, str, str, str, str]:
 		'''Parse the line_type Parameter'''
 		try:
 			parameter, unit, value, description, group = LASParser.parse_parameter_line(line)
@@ -115,14 +118,14 @@ class LASParser(object):
 					self.__dict__[parameter] = value
 		return (parameter, unit, value, description, group)
 
-	def parameter_vers(self, value):
+	def parameter_vers(self, value: str) -> None:
 		'''Set Version Value'''
 		try:
 			self.VERS = float(value)
 		except ValueError:
 			self.VERS = value
 
-	def parse_ascii(self, lines):
+	def parse_ascii(self, lines: Iterable[str]) -> Iterator[tuple[str, list[str]]]:
 		'''handle ascii block'''
 		first_line = True
 		line = ""
@@ -154,7 +157,8 @@ class LASParseError(Exception):
 	'''LAS Parsing Errors'''
 	pass
 
-def exception_processor(las_file, parser):
+
+def exception_processor(las_file, parser: LASParser) -> None:
 	'''Continue processing LAS after exception'''
 	try:
 		deque(parser.parse_las(las_file))
@@ -165,7 +169,7 @@ def exception_processor(las_file, parser):
 			exception_processor(las_file, parser)
 
 
-def validate_folder(folder_path=None):
+def validate_folder(folder_path: str | None = None) -> None:
 	'''Validate LAS files in a folder using the class-based parser.'''
 	if folder_path is None:
 		folder_path = os.path.realpath(os.path.join("Development", "LAS", "LAS Files"))
@@ -179,7 +183,7 @@ def validate_folder(folder_path=None):
 					exception_processor(las_file, parser)
 
 
-def main():
+def main() -> None:
 	'''Run LAS validation using default folder location.'''
 	validate_folder()
 

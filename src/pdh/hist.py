@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from numpy.random import normal, uniform
 
 
-def show_histogram(count=1000, bins=20, low=-3, high=3):
+def show_histogram(count: int = 1000, bins: int = 20, low: float = -3, high: float = 3) -> None:
     """Render a Gaussian vs Uniform histogram with default parameters."""
     gaussian_numbers = normal(size=count)
     uniform_numbers = uniform(low=low, high=high, size=count)
@@ -30,7 +30,7 @@ def show_histogram(count=1000, bins=20, low=-3, high=3):
     plt.show()
 
 
-def main():
+def main() -> None:
     """Run the demo histogram with defaults."""
     show_histogram()
 

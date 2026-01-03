@@ -9,7 +9,7 @@ from pdh import adnod
 from pdh import pdh_files
 import os
 
-def run(username="Robert Farnan", prgnm="Shell"):
+def run(username: str = "Robert Farnan", prgnm: str = "Shell") -> None:
     """Run the Rev2 shell with default configuration."""
     usernode = pdh_files.unm2uns(username)
     sppath = pdh_files.prnm2spath(prgnm)
@@ -152,7 +152,7 @@ def run(username="Robert Farnan", prgnm="Shell"):
     # also need to handle case where constant is spec'd for output -
 
 
-def main():
+def main() -> None:
     """Run the shell using default parameters."""
     run()
 

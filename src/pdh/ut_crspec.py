@@ -3,7 +3,8 @@ import os
 import ast
 
 
-def _prompt_specs(kind, count):
+def _prompt_specs(kind: str, count: int | str) -> list[dict[str, str]]:
+    """_prompt_specs."""
     items = []
     j = 0
     while j < int(count):
@@ -26,7 +27,14 @@ def _prompt_specs(kind, count):
     return items
 
 
-def create_program_spec(progname, nin, nout, inputs=None, outputs=None, system_root=r"C:\PDH\System\L1K1\L2K"):
+def create_program_spec(
+    progname: str,
+    nin: int | str,
+    nout: int | str,
+    inputs: list[dict[str, str]] | None = None,
+    outputs: list[dict[str, str]] | None = None,
+    system_root: str = r"C:\PDH\System\L1K1\L2K",
+) -> str:
     """Create a spec file for an existing program."""
     i = 1
     prpath = system_root + str(i) + r"\s.0"
@@ -52,7 +60,7 @@ def create_program_spec(progname, nin, nout, inputs=None, outputs=None, system_r
     raise FileNotFoundError("Program not found")
 
 
-def main():
+def main() -> None:
     """Prompt for program spec inputs and write the spec file."""
     progname = input("Enter Program Name")
     nin = input("Number of inputs :")
