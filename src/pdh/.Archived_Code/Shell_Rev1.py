@@ -27,7 +27,7 @@
 # or ZP/GP
 #
 #NI,NO = RDRF(Runfile) # RDRF returns #IN,#OUT array of assigments
-import adnod, pdh_files
+from pdh import adnod, pdh_files
 import os
 curnode= input("Enter Curnode") # current test data node (curnode) should be passed from IP
 path=adnod.ns2path(curnode)
@@ -160,3 +160,4 @@ for w in ohan:
 
 # if you have zone ouput then that wil be handled here
 # also need to handle case where constant is spec'd for output - 
+

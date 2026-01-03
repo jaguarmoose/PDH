@@ -5,8 +5,8 @@
 # Read runfile, set up index  loop, fill invals based on runfile = value
 # or get value from VF. Run code ( some in some out depth loop ) Output curves
 # or ZP/GP
-import adnod
-import pdh_files
+from pdh import adnod
+from pdh import pdh_files
 import os
 username = "Robert Farnan"   # This needs to be case insenstive
 usernode = pdh_files.unm2uns(username)
@@ -154,3 +154,4 @@ for w in ohan:
 
 # if you have zone ouput then that wil be handled here
 # also need to handle case where constant is spec'd for output -
+

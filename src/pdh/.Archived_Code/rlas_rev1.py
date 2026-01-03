@@ -1,7 +1,7 @@
 import sys
 import getopt
-import adnod
-import pdh_files
+from pdh import adnod
+from pdh import pdh_files
 import os
 # Enter Parent Node string
 PNS="1:1:4"
@@ -106,3 +106,4 @@ for vp in vpath:
     os.remove(vp)
     os.rename(vp + r"_tmp", vp)
 print("End")
+

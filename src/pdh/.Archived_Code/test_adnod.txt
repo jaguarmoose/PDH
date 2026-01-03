@@ -14,3 +14,4 @@ def ns2path(ns):    # convert a nodestring to dir path
     print(path)
     return path
             
+

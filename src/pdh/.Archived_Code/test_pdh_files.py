@@ -1,5 +1,5 @@
-import pdh_files
-import adnod
+from pdh import pdh_files
+from pdh import adnod
 ns="1:2"
 label="Twilight"
 path=adnod.ns2path(ns)+ "\s.0"
@@ -20,3 +20,4 @@ ninx=500
 minx=1000
 vdata=[".11"]*ninx  # Rt written as 50.2 Pore as .11 
 stuff=pdh_files.upvf(vpath,sinx,ninx,minx,vdata) 
+

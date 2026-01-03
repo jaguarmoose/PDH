@@ -1,4 +1,4 @@
-import pdh_files, adnod
+from pdh import pdh_files, adnod
 curnode= "1:2"              # frend provides curnode
 rfp=adnod.ns2path(curnode)
 di=1                        # IP picks up from Curnode DI
@@ -17,3 +17,4 @@ rfpath=rfp+ r'/s.5'
 prgnm='Bunker'
 rfvals=["1","#2",".08","2","2","#1","#4"]
 stuff= pdh_files.wrrf(rfpath,prgnm,nin,nout,rfvals,sindex,npts,mxpts)
+
