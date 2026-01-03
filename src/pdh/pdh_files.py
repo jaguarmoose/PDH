@@ -2,7 +2,7 @@
 # Need to error check for directory and file then return
 def crinf(ns,label,iname,units,si,npts,di): # Nodestring and Node Label
     import os
-    import adnod
+    from pdh import adnod
     path = adnod.ns2path(ns)
     path= path + "\s.0"
     fso=open(path,"w")
@@ -15,7 +15,7 @@ def crinf(ns,label,iname,units,si,npts,di): # Nodestring and Node Label
     fso.close()
 def rdinf(ns): #,nodename,nindex,nstart,nnpts,ndi,nunits): # returns a list
     import os
-    import adnod
+    from pdh import adnod
     import ast
     nlist=[]
     path = adnod.ns2path(ns)
@@ -45,7 +45,9 @@ def crdi(path,label,npts,start,units):
          oline=line + "\n"
          fo.write(oline)
 def rdzone (curnode,zname): # Looks for Zone-zname in INF returns ztop zbase or ' '
-    import os ,ast ,adnod
+    import os
+    import ast
+    from pdh import adnod
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -63,7 +65,9 @@ def rdzone (curnode,zname): # Looks for Zone-zname in INF returns ztop zbase or 
     infhan.close()
     return ztop,zbase
 def wrzone(curnode,zonenm,ztop,zbase):
-    import os ,ast ,adnod
+    import os
+    import ast
+    from pdh import adnod
     dum1,dum2= rdzone(curnode,zonenm)
     if dum1 ==' ':
         curpath=adnod.ns2path(curnode)    # gp to value
@@ -76,7 +80,9 @@ def wrzone(curnode,zonenm,ztop,zbase):
         return
     return
 def wrzp(curnode,zonenm,zpname,zpvalue,zpunits=' '):
-    import os ,ast,adnod                # within record find name replace value with value
+    import os
+    import ast
+    from pdh import adnod                # within record find name replace value with value
     curpath=adnod.ns2path(curnode)    # gp to value
     path=curpath+"/s.0"
     infile=path                 # if record not found append to file
@@ -111,7 +117,8 @@ def wrzp(curnode,zonenm,zpname,zpvalue,zpunits=' '):
 
 
 def rdzp(curnode,zonenm,zpname):
-    import ast, adnod               # within record find name replace value with value
+    import ast
+    from pdh import adnod               # within record find name replace value with value
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -128,7 +135,7 @@ def rdzp(curnode,zonenm,zpname):
     return zvalue;
 def nxtsf(ns):
     import os
-    import adnod
+    from pdh import adnod
     n=1
     if ns[0] == '2':
         ipath=adnod.uns2path(ns)
@@ -143,7 +150,7 @@ def crvf(ns, name, units,npts, nval=-999.99):
      #Create a Vector File, updated: include npts in call nval in call default
     import os
     import ast
-    import adnod
+    from pdh import adnod
     path = adnod.ns2path(ns) # open the inf file to read
                              # This should be read from DI record on INF
     path=path +"\s.0"
@@ -178,7 +185,7 @@ def crvf(ns, name, units,npts, nval=-999.99):
     return n;
 def nxtvf(ns):
     import os
-    import adnod
+    from pdh import adnod
     n=1
     rpath = adnod.ns2path(ns)
     path=rpath+r"\v."+str(n)
@@ -209,7 +216,9 @@ def upsf(path): # open file path look record begin with rlab
     os.remove(infile)
     os.rename(outfile,infile)
 def rdgp(curnode,gpname):
-    import os,ast,adnod
+    import os
+    import ast
+    from pdh import adnod
     curpath=adnod.ns2path(curnode)    # gp to value
     infpath=curpath+"/s.0"
     infhan=open(infpath,"r")
@@ -405,7 +414,9 @@ def fnm2num(curnode,rtype,fname,kind=''):
                 # read records looking for match to file type and name
                 # if present return num else
                 # if EOF return ''
-    import os, ast, adnod
+    import os
+    import ast
+    from pdh import adnod
     if curnode[0] == '2':
         curpath = adnod.uns2path(curnode)
     else:
@@ -433,7 +444,7 @@ def fnm2num(curnode,rtype,fname,kind=''):
 
 # write user global file
 def wruglobf(usernode, glfnam, glnams, glvals):
-    import adnod
+    from pdh import adnod
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
     if sfn == ' ':
@@ -454,7 +465,7 @@ def wruglobf(usernode, glfnam, glnams, glvals):
 
 def rduglobf(usernode, glfnam, glnams, glvals):
     import ast
-    import adnod
+    from pdh import adnod
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', glfnam, "Glob")
     if sfn == ' ':
@@ -477,7 +488,7 @@ def rduglobf(usernode, glfnam, glnams, glvals):
 
 def rdnodesf(usernode, nodesfnam, nodes, nodenames):
     import ast
-    import adnod
+    from pdh import adnod
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
     if sfn == ' ':
@@ -498,7 +509,7 @@ def rdnodesf(usernode, nodesfnam, nodes, nodenames):
 
 
 def wrnodesf(usernode, nodesfnam, nodes, nodenames):
-    import adnod
+    from pdh import adnod
     userpath = adnod.uns2path(usernode)
     sfn = fnm2num(usernode, 'SF', nodesfnam, "Nodes")
     if sfn == ' ':

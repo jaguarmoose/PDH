@@ -11,7 +11,7 @@
             "cwd": "${workspaceRoot}",
             "env": null,
             "envFile": "${workspaceRoot}/.env",
-            "console": "internalConsole"
+            "console": "internalConsole",
             "debugOptions": [
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",
@@ -28,7 +28,7 @@
             "cwd": "${workspaceRoot}",
             "env": null,
             "envFile": "${workspaceRoot}/.env",
-            "console": "externalTerminal"
+            "console": "externalTerminal",
             "debugOptions": [
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",
@@ -74,6 +74,14 @@
                 "WaitOnNormalExit",
                 "RedirectOutput"
             ]
+        },
+        {
+            "name": "PDH (module)",
+            "type": "python",
+            "request": "launch",
+            "module": "pdh",
+            "cwd": "${workspaceRoot}",
+            "console": "integratedTerminal"
         },
         {
             "name": "Integrated Terminal/Console",

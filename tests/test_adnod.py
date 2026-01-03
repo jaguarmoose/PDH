@@ -1,6 +1,6 @@
 import os
 
-import adnod
+from pdh import adnod
 
 
 def test_ns2path_builds_expected_windows_path():

@@ -1,8 +1,8 @@
-from LASParser import parseLAS, LASParseError
+from pdh.LASParser import parseLAS, LASParseError
 import sys
 import getopt
-import adnod
-import pdh_files
+from pdh import adnod
+from pdh import pdh_files
 import os
 import itertools
 import operator

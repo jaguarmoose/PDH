@@ -4,8 +4,7 @@
     "python.unitTest.unittestEnabled": false,
     "python.unitTest.nosetestsEnabled": false,
     "files.autoSave": "afterDelay",
-    "[python]": {
-    },
+    "[python]": {},
     "workbench.iconTheme": "vscode-icons",
     "files.exclude": {
         "**/*.pyc": true,
@@ -16,5 +15,9 @@
         "**/.DS_Store": true
     },
     "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
-    "python.terminal.activateEnvironment": true
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}\\src"
+    ],
+    "python-envs.pythonProjects": []
 }

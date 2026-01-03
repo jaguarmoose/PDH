@@ -1,14 +1,23 @@
 # This is the shell program
 # In essence this program will read the run string which will have in it:
 #  Program name , Curnode and a runfile
-#
+# 'GR', 'help': 'Gamma Ray In', 'range': '', 'def': '', 'NUM': '0'}
+# 'GRMIN', 'help': 'Gamma Ray Min', 'range': '', 'def': '20', 'NUM': '1'}
+#'GMAX', 'help': 'Gamma Ray Max', 'range': '', 'def': '120', 'NUM': '2'}
+#: 'GRTYP', 'help': 'Gr Type Steiber -1 Lin 2', 'range': '', 'def': '1', 'NUM': '3'}
+#'NPHI', 'help': 'Neutron Porosity in dec', 'range': '', 'def': 'vNPHI', 'NUM': '4'}
+#: 'DPHI', 'help': 'Density Porosity in dec', 'range': '', 'def': 'vDPHI', 'NUM': '5'}
+# 'NPHI Min', 'help': 'Minimum Neutron', 'range': '', 'def': '0', 'NUM': '6'}
+#'NPHI Max', 'help': 'Neutron Max', 'range': '', 'def': '.2', 'NUM': '7'}
+# 'N-D Sep', 'help': '100% Shale N-D Separation', 'range': '', 'def': 'Dec', 'NUM': '8'}
 # Read runfile, set up index  loop, fill invals based on runfile = value
 # or get value from VF. Run code ( some in some out depth loop ) Output curves
 # or ZP/GP
-import adnod
-import pdh_files
+from pdh import adnod
+from pdh import pdh_files
 import os
 username = "Robert Farnan"   # This needs to be case insenstive
+prgnm = 'CStats' # Enter Program Name
 usernode = pdh_files.unm2uns(username)
 sppath = pdh_files.prnm2spath(prgnm)
 print(sppath)
@@ -25,9 +34,7 @@ curnode = fegvalues[0]
 zone = fegvalues[2]
 rfconout = fegvalues[4]
 rfnamin = rfconout
-path = adnod.ns2path(curnode)
 print(prgnm + rfnamin + curnode)
-prgnm = 'enter program name' # Enter Program Name
 path = adnod.ns2path(curnode)
 #  Open the runfile in Curnode
 rflab = prgnm + "_" + rfnamin
@@ -77,6 +84,10 @@ for v in rfuovals:
     i = i+1
 
 # all handles and files should open and ready now thru the depth loop
+# here place any before depth loop info
+good_values=0
+good_discrim_values=0
+sum_civ=0
 ic = 1
 #  first loop until start index and after end index
 while ic <= mxpts:
@@ -107,18 +118,20 @@ while ic <= mxpts:
                 ivals[h] = ivals[h].strip('\n')
             h = h+1
 #  Now insert User calculation -
-#  ilabs=["a","Phi","Rw","M","N","Rt"]
+#  ilabs=["gr","grmin","grmax","grtyp","NPHI","DPHI","NPHIMin","NPHIMax","ND-sep","VSH_GR",VSH_N","VSH_ND"]
         print(ic)
-        a = float(ivals[0])
-        phi = float(ivals[1])
-        rw = float(ivals[2])
-        m = float(ivals[3])
-        n = float(ivals[4])
-        rt = float(ivals[5])
-        if a > 0 and phi >0 and rw > 0 and m > 0 and n>0 and rt > 0:
-            sw = ((a/phi**m)*rw/rt)**(1/n)
-        else:
-            sw = -999.99
+        civ = float(ivals[0])
+        cmin = float(ivals[1])
+        cmax = float(ivals[2])
+        
+# Mean logic
+        if civ!= -999.25 and civ != -999.99:
+            good_values=good_values +1
+            if civ >= cmin and civ <= cmax:
+                good_discrim_values= good_discrim_values + 1
+                sum_civ= sum_civ + civ
+
+# assign outputs
 
         h = 0
         for v in ohan:
@@ -126,7 +139,7 @@ while ic <= mxpts:
                 pass
             else:
                 v.readline()
-                than[h].write(str(sw) + "\n")
+                than[h].write(ovals[h] + "\n")
             h = h+1
     ic = ic+1
 # Need to read/write files to EOF should be done
@@ -137,6 +150,7 @@ for w in inhan:
         w.close()
     i = i+1
 i = 0
+#  Loop thur handles to close ins outs and temps
 for w in ohan:
     if rfuovals[i][0] == "v":
         w.close()
@@ -146,7 +160,24 @@ for w in ohan:
         os.remove(vpath)
         os.rename(vtmp, vpath)
     i = i+1
-#  Loop thur handles to close ins outs and temps
 
 # if you have zone ouput then that wil be handled here
-# also need to handle case where constant is spec'd for output -
+# also need to handle case where constant is spec'd for output
+mean_civ = sum_civ/good_discrim_values
+ovals[0]=str(mean_civ)
+ovals[1]=str(good_discrim_values)
+ovals[2]=str(good_values)
+infpath = path + r'/s.0'
+i=0
+for v in rfuovals:
+    if v[0] == 'g':
+        stuff = pdh_files.wrgp(infpath,v[1:],ovals[i],"units")
+    if v[0] == 'z':
+       top,base = rdzone (curnode,zname) 
+       if top != ' ':
+           stuff = pdh_files.wrzp(curnode,zone,v[1:],ovals[i],"units")
+       else:
+           print('Zone does not exist')
+    i=i+1       
+
+print( str( mean_civ) + str(good_discrim_values))

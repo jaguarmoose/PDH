@@ -1,4 +1,4 @@
-import adnod
+from pdh import adnod
 I,J,K = 0,0,0
 while I < 5:
     I=I+1

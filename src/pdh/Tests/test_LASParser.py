@@ -89,9 +89,13 @@ class TestLASParser(unittest.TestCase):
 if __name__ == '__main__':
     import sys
     import os
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-    from Library.LASParser import LASParser, LASParseError
+    sys.path.append(
+        os.path.abspath(
+            os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)
+        )
+    )
+    from pdh.Library.LASParser import LASParser, LASParseError
     unittest.main()
     pass
 else:
-    from ..Library.LASParser import LASParser, LASParseError
+    from pdh.Library.LASParser import LASParser, LASParseError

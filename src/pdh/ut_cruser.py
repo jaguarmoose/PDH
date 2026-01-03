@@ -1,8 +1,8 @@
 # create user
 import os
-import pdh_files
+from pdh import pdh_files
 import ast
-import adnod
+from pdh import adnod
 username = input('Enter User Name')      # Add a data node to
 urrpath = r'C:\PDH\USER\L1K1\L2K'
 i = 1

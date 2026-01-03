@@ -5,8 +5,8 @@
 # Read runfile, set up index  loop, fill invals based on runfile = value
 # or get value from VF. Run code ( some in some out depth loop ) Output curves
 # or ZP/GP
-import adnod
-import pdh_files
+from pdh import adnod
+from pdh import pdh_files
 import os
 import matplotlib.pyplot as plt
 username = "Robert Farnan"   # This needs to be case insenstive
@@ -29,7 +29,10 @@ zone = fegvalues[2]
 rfconout = fegvalues[4]
 rfnamin = rfconout
 path = adnod.ns2path(curnode)
-print(prgnm + rfnamin + curnode)
+print(prgnm + rfnamin + curnode)# current test data node (curnode) should be passed from IP
+prgnm = 'XPlot'
+# rfnamin = input("Enter RF name")
+path = adnod.ns2path(curnode)
 #  Open the runfile in Curnode
 rflab = prgnm + "_" + rfnamin
 rfn = pdh_files.fnm2num(curnode, 'SF', rflab)
@@ -79,7 +82,8 @@ for v in rfuovals:
 
 # all handles and files should open and ready now thru the depth loop
 ic = 1
-hvalues = []  # initialize histlist
+xvalues = []  # initialize histlist
+yvalues = []
 gpts = 0
 sumgpts = 0
 #  first loop until start index and after end index
@@ -110,10 +114,15 @@ while ic <= mxpts:
                 ivals[h] = v.readline()
                 ivals[h] = ivals[h].strip('\n')
                 if h== 0:
-                    if ivals[h] != '-999.25' and ivals[h] !='-999.99':
-                        hvalues.append(ivals[h])
-                        gpts = gpts + 1
-                        sumgpts = sumgpts + float(ivals[h])
+                    #if ivals[h] != '-999.25' and ivals[h] !='-999.99':
+                    xvalues.append(ivals[h])
+                    
+                elif h== 1:
+                    #if ivals[h] != '-999.25' and ivals[h] !='-999.99':
+                    yvalues.append(ivals[h])
+                        #gpts = gpts + 1
+                        #sumgpts = sumgpts + float(ivals[h])
+                    
                         
             h = h+1
 #  Now insert User calculation -
@@ -130,18 +139,25 @@ while ic <= mxpts:
 # Need to read/write files to EOF should be done
 lx=0
 rx=.5
-hnums = [float(i) for i in hvalues]
-slmean = str(sumgpts/gpts)
-smean = slmean[:5]
+gpts=0
+xnums = []
+ynums = []
+for i,j in zip(xvalues, yvalues):
+    if i != '-999.25' and i !='-999.99' and j != '-999.25' and j != '-999.99': 
+        print(i+j)
+        xnums.append(float(i))
+        ynums.append(float(j))
+        gpts=gpts+1
+        
 sgpts= str(gpts)
 wname= 'well_name_1:1:4:18'
-plt.hist(hnums, bins=20,range=(lx,rx), histtype='stepfilled', normed=True, color='b', label=rfuivals[0][1:])
-#plt.hist(uniform_numbers, bins=20, histtype='stepfilled', normed=True, color='r', alpha=0.5, label='Uniform')
-#plt.xlim(0,2)
-plt.title("For Well " + wname + " Number Good Pts " + sgpts + " Mean " + smean )
-plt.xlabel('Water Saturation Hist')
-plt.ylabel("Probability")
-plt.legend()
+plt.scatter(xnums,ynums)
+plt.title("For Well " + wname + " Number Good Pts " + sgpts )
+plt.xlabel( rfuivals[0][1:])
+plt.ylabel( rfuivals[1][1:])
+plt.ylim(0,.2)
+plt.xlim(0,.2)
+#plt.legend()
 plt.show()
 
 # Need to close all file here plus rename tmp files
