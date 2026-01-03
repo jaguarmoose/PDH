@@ -20,31 +20,36 @@ import operator
 #   output properties to properties
 #   output curves to curves
 
-if __name__ == '__main__':
-    curnode = "1:1:4:1"  # frend provides curnode working in 1:4 for test
-    lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
-                                           
-else:
-    lasfnm = input("Enter LAS File Name")
+def parse_las_file(lasfnm):
+    """Parse a LAS file and return the curve list."""
+    with open(lasfnm, "r") as lashan:
+        try:
+            parsedLAS = parseLAS(lashan)
+            curves = []
+            for line in parsedLAS:
+                if line[0] == "ascii":
+                    print(curves)
+                    curveMatrix = zip(
+                        *map(operator.itemgetter(1), itertools.chain((line,), parsedLAS))
+                    )
+                    break
+                elif line[0] == "curve":
+                    curves.append(line[1][0])
+            return curves
+        except LASParseError as e:
+            print(e, lasfnm)
+            return []
 
-lashan = open(lasfnm, 'r')
-try:
-    #deque(parseLAS(file))
-    parsedLAS = parseLAS(lashan)
-    curves = []
-    for line in parsedLAS:
-        if line[0] == 'ascii':
-            print(curves)
-            curveMatrix = zip(*map(operator.itemgetter(1), itertools.chain((line,),parsedLAS)))
-            #print('\n'.join(map(str, curveMatrix)))
-            break
-        elif line[0] == 'curve':
-            #print(line)
-            curves.append(line[1][0])
 
-    # print('\n'.join(map(str, parseLAS(lashan))))
-except LASParseError as e:
-    print(e,filepath)
+def main(lasfnm=None, curnode="1:1:4:1"):
+    """Run the LAS parser with a default file when executed directly."""
+    if lasfnm is None:
+        lasfnm = r"C:/PDH/Development/LAS/LAS Files/D-D' LAS Files/Bean/Bean_A.las"
+    parse_las_file(lasfnm)
+
+
+if __name__ == "__main__":
+    main()
 
 # line=''
 # while line[0:2]!='~A':

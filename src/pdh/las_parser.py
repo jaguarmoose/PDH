@@ -107,23 +107,26 @@ class LASParseError(Exception):
     pass
 
 
-if __name__ == '__main__':
-    folderPath = os.path.realpath(os.path.join("Development", "LAS",
-                                               "LAS Files"))
+def validate_folder(folder_path=None):
+    """Parse all LAS files under a folder and print any errors."""
+    if folder_path is None:
+        folder_path = os.path.realpath(os.path.join("Development", "LAS", "LAS Files"))
 
-    for root, dirs, files in os.walk(folderPath, topdown=False):
+    for root, dirs, files in os.walk(folder_path, topdown=False):
         for filename in files:
-            if filename.lower().endswith('.las'):
+            if filename.lower().endswith(".las"):
                 filepath = os.path.join(root, filename)
-                with open(filepath, 'r') as las_file:
+                with open(filepath, "r") as las_file:
                     try:
                         deque(parseLAS(las_file))
-                        # print('\n'.join(map(str, parseLAS(lashan))))
                     except LASParseError as e:
                         print(e, filepath)
-                        # exc_type, exc_obj, tb = sys.exc_info()
-                        # f = tb.tb_frame
-                        # lineno = tb.tb_lineno
-                        # python_filename = f.f_code.co_filename
-                        # print 'EXCEPTION {}, FILE {},
-                        # {}'.format(type(e).__name__,filepath, e)
+
+
+def main():
+    """Validate LAS files using default folder location."""
+    validate_folder()
+
+
+if __name__ == "__main__":
+    main()

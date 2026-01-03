@@ -1,16 +1,27 @@
-''' list programs program entry '''
+"""List program entries from the System tree."""
 import os
 import ast
-prrpath = os.sep+os.path.join('Users', 'robertfarnan', 'PDH', 'System', 'L1K1', 'L2K')
-i = 1
-prpath = os.path.join(prrpath + str(i), 's.0')
-while os.path.isfile(prpath):
-    with open(prpath, 'r') as ph:
-        line = ph.readline()
-        d = ast.literal_eval(line)  # line is now a dictionary
-        progname = d['Prgnm']
-        desc = d['Desc']
-        print('Program #' + str(i) + ' Name: ' + progname + '  Description: ' + desc)
 
-    i = i+1
-    prpath = os.path.join(prrpath + str(i), 's.0')
+
+def iter_programs(system_root):
+    """Yield (index, name, desc) entries from the program records."""
+    i = 1
+    prpath = os.path.join(system_root + str(i), "s.0")
+    while os.path.isfile(prpath):
+        with open(prpath, "r") as ph:
+            line = ph.readline()
+            d = ast.literal_eval(line)  # line is now a dictionary
+            yield i, d["Prgnm"], d["Desc"]
+        i += 1
+        prpath = os.path.join(system_root + str(i), "s.0")
+
+
+def main():
+    """Print program entries using a default root."""
+    system_root = os.sep + os.path.join("Users", "robertfarnan", "PDH", "System", "L1K1", "L2K")
+    for idx, progname, desc in iter_programs(system_root):
+        print("Program #" + str(idx) + " Name: " + progname + "  Description: " + desc)
+
+
+if __name__ == "__main__":
+    main()

@@ -151,31 +151,38 @@ class LASParseError(Exception):
 	'''LAS Parsing Errors'''
 	pass
 
-if __name__ == '__main__':
-	import os
+def exception_processor(las_file, parser):
+	'''Continue processing LAS after exception'''
 	import traceback
 	from collections import deque
-	__folder_path__ = os.path.realpath(os.path.join("Development", "LAS",
-													"LAS Files"))
+	try:
+		deque(parser.parseLAS(las_file))
+	except LASParseError as ex:
+		print(ex, las_file.name)
+		print(traceback.format_exc())
+		if las_file is not None:
+			exception_processor(las_file, parser)
 
-	def exceptionProcessor(las_file, parser):
-		'''Continue processing LAS after exception'''
-		try:
-			deque(parser.parseLAS(las_file))
-			# print('\n'.join(map(str, parseLAS(lashan))))
-		except LASParseError as ex:
-			print(ex, las_file.name)
-			print(traceback.format_exc())
-			if las_file != None:
-				exceptionProcessor(las_file, parser)
 
-	las_file_no = 1
-	for root, dirs, files in os.walk(__folder_path__, topdown=False):
+def validate_folder(folder_path=None):
+	'''Validate LAS files in a folder using the class-based parser.'''
+	import os
+	if folder_path is None:
+		folder_path = os.path.realpath(os.path.join("Development", "LAS", "LAS Files"))
+
+	for root, dirs, files in os.walk(folder_path, topdown=False):
 		for filename in files:
 			if filename.lower().endswith('.las'):
-				las_file_no += 1
 				filepath = os.path.join(root, filename)
-				with open(filepath, 'r') as __las_file__:
-					__parser__ = LASParser()
-					exceptionProcessor(__las_file__, __parser__)
-					#print(__parser__.curves)
+				with open(filepath, 'r') as las_file:
+					parser = LASParser()
+					exception_processor(las_file, parser)
+
+
+def main():
+	'''Run LAS validation using default folder location.'''
+	validate_folder()
+
+
+if __name__ == '__main__':
+	main()

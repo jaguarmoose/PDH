@@ -7,6 +7,7 @@ from pdh import pdh_files
 
 
 def run_cli():
+    """Run the CLI front end."""
     print(
         "Front End Commands:\n"
         "  ! execute a program (system tree)\n"
@@ -31,12 +32,18 @@ def run_cli():
 
 
 def run_gui():
+    """Run the GUI front end."""
     from pdh.frend_gui import run_gui as _run_gui
     _run_gui()
 
 
-if __name__ == "__main__":
+def main():
+    """Run the default front end, falling back to CLI on errors."""
     try:
         run_gui()
     except Exception:
         run_cli()
+
+
+if __name__ == "__main__":
+    main()

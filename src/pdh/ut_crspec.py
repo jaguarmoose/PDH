@@ -1,54 +1,71 @@
-# create program spec file
+"""Create a program spec file."""
 import os
 import ast
-progname = input('Enter Program Name')
-prrpath = r'C:\PDH\System\L1K1\L2K'
-i = 1
-prpath = prrpath + str(i) + r'\s.0'
-while os.path.exists(prpath):
-    ph = open(prpath, 'r')
-    line = ph.readline()
-    d = ast.literal_eval(line)  # line is now a dictionary
-    if d['Prgnm'] == progname:
-        print("Found Program ")
-        ph.close()
-        rec={ 'FileNum': '1', 'Name': progname, 'Rtype': 'SF', 'Kind': 'Spec'}
-        s = str(rec)
-        ph = open(prpath, 'a')
-        ph.write(s + "\n")
-        ph.close()
-        # now find ask for input and ouputs then specifics for each
-        # open s.0 file - put entry in s.0 and finish spec file
-        # and s.1
-        p0=open(prrpath + str(i)+ r'\s.1','w')
-        nin = input('Number of inputs :')
-        nout = input('Number of outputs :')
-        rec={'Ftype': 'Spec', 'Rtype': 'HD','Prgnm':progname,'NIN':nin,'NOUT':nout}
-        s = str(rec)
-        p0.write(s + "\n")
-        j=0
-        while j < int(nin):
-            lab = input('Enter Label for Input #: '+ str(j))
-            defl = input('Enter default for Input #: '+ str(j))
-            units = input('Enter units for Input #: '+ str(j))
-            helpt = input('Enter help for Input #: '+ str(j))
-            rec={'Rtype':'IN','NUM':str(j),'label': lab,'def': defl,'units': units,'help': helpt,'range':''}
-            s = str(rec)
-            p0.write(s + "\n")
-            j=j+1
-        j=0
-        while j <  int(nout):
-            lab = input('Enter Label for Output #: '+ str(j))
-            defl = input('Enter default for Output #:'+ str(j))
-            units = input('Enter units for Output #: '+ str(j))
-            helpt = input('Enter help for Output #: '+ str(j))
 
-            rec={'Rtype':'OUT','NUM':str(j),'label': lab,'def': defl,'units': units,'help': helpt,'range':''}
-            s = str(rec)
-            p0.write(s + "\n")
-            j=j+1
-        p0.close()    
-        exit()
-    ph.close()
-    i = i+1
-    prpath = prrpath + str(i) + r'\s.0'
+
+def _prompt_specs(kind, count):
+    items = []
+    j = 0
+    while j < int(count):
+        lab = input(f"Enter Label for {kind} # {j}")
+        defl = input(f"Enter default for {kind} # {j}")
+        units = input(f"Enter units for {kind} # {j}")
+        helpt = input(f"Enter help for {kind} # {j}")
+        items.append(
+            {
+                "Rtype": kind.upper(),
+                "NUM": str(j),
+                "label": lab,
+                "def": defl,
+                "units": units,
+                "help": helpt,
+                "range": "",
+            }
+        )
+        j += 1
+    return items
+
+
+def create_program_spec(progname, nin, nout, inputs=None, outputs=None, system_root=r"C:\PDH\System\L1K1\L2K"):
+    """Create a spec file for an existing program."""
+    i = 1
+    prpath = system_root + str(i) + r"\s.0"
+    while os.path.exists(prpath):
+        with open(prpath, "r") as ph:
+            line = ph.readline()
+            d = ast.literal_eval(line)  # line is now a dictionary
+            if d["Prgnm"] == progname:
+                rec = {"FileNum": "1", "Name": progname, "Rtype": "SF", "Kind": "Spec"}
+                with open(prpath, "a") as wh:
+                    wh.write(str(rec) + "\n")
+                spec_path = system_root + str(i) + r"\s.1"
+                with open(spec_path, "w") as p0:
+                    header = {"Ftype": "Spec", "Rtype": "HD", "Prgnm": progname, "NIN": str(nin), "NOUT": str(nout)}
+                    p0.write(str(header) + "\n")
+                    for rec in inputs or []:
+                        p0.write(str(rec) + "\n")
+                    for rec in outputs or []:
+                        p0.write(str(rec) + "\n")
+                return spec_path
+        i += 1
+        prpath = system_root + str(i) + r"\s.0"
+    raise FileNotFoundError("Program not found")
+
+
+def main():
+    """Prompt for program spec inputs and write the spec file."""
+    progname = input("Enter Program Name")
+    nin = input("Number of inputs :")
+    nout = input("Number of outputs :")
+    inputs = _prompt_specs("input", nin)
+    outputs = _prompt_specs("output", nout)
+    try:
+        spec_path = create_program_spec(progname, nin, nout, inputs=inputs, outputs=outputs)
+    except FileNotFoundError as exc:
+        print(exc)
+        return
+    print("Wrote spec file at " + spec_path)
+
+
+if __name__ == "__main__":
+    main()

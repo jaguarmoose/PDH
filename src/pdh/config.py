@@ -1,30 +1,35 @@
-'''Configure Folder Paths'''
+"""Configure PDH folder paths."""
 import configparser
 import os
 
 
-__path_pdh__ = os.path.realpath(os.path.join(__file__, '..', '..', '..'))
-__path_config__ = os.path.join(__path_pdh__, 'pdh.cfg')
+def load_paths(config_path=None, base_path=None):
+    """Load configured paths and return a dict of resolved directories."""
+    if base_path is None:
+        base_path = os.path.realpath(os.path.join(__file__, "..", "..", ".."))
+    if config_path is None:
+        config_path = os.path.join(base_path, "pdh.cfg")
 
-config = configparser.RawConfigParser()
-config.read(__path_config__)
+    config = configparser.RawConfigParser()
+    config.read(config_path)
+
+    return {
+        "pdh": base_path,
+        "user": os.path.join(base_path, config.get("PDH", "path_user")),
+        "system": os.path.join(base_path, config.get("PDH", "path_system")),
+        "data": os.path.join(base_path, config.get("PDH", "path_data")),
+    }
 
 
-__path_user__ = os.path.join(__path_pdh__, config.get('PDH', 'path_user'))
+def main():
+    """Print configured path availability using default config."""
+    paths = load_paths()
+    for label, path in (("USER", paths["user"]), ("SYSTEM", paths["system"]), ("DATA", paths["data"])):
+        if os.path.isdir(path):
+            print(label + " Path: " + path)
+        else:
+            print("**Missing** " + label + " Path: " + path)
 
-if os.path.isdir(__path_user__):
-    print('USER Path: ' + __path_user__)
-else:
-    print('**Missing** USER Path: ' + __path_user__)
 
-__path_system__ = os.path.join(__path_pdh__, config.get('PDH', 'path_system'))
-if os.path.isdir(__path_system__):
-    print('SYSTEM Path: ' + __path_system__)
-else:
-    print('**Missing** SYSTEM Path: ' + __path_system__)
-
-__path_data__ = os.path.join(__path_pdh__, config.get('PDH', 'path_data'))
-if os.path.isdir(__path_data__):
-    print('DATA Path: ' + __path_data__)
-else:
-    print('**Missing** USER Path: ' + __path_data__)
+if __name__ == "__main__":
+    main()

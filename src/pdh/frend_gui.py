@@ -108,3 +108,12 @@ def run_gui():
     window = FrendWindow()
     window.show()
     sys.exit(app.exec_())
+
+
+def main():
+    """Launch the PDH front-end GUI."""
+    run_gui()
+
+
+if __name__ == "__main__":
+    main()

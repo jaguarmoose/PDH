@@ -527,8 +527,13 @@ def wrnodesf(usernode, nodesfnam, nodes, nodenames):
     nodeshan.close()
     return
 
+def main():
+    """Entry point for manual testing of pdh_files helpers."""
+    print("pdh_files module loaded")
+
+
 if __name__ == '__main__':
-    wrnodesf()
+    main()
 
 def unm2uns(username):    # convert user name to user number
     import os
